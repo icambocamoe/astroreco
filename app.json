@@ -1,5 +1,6 @@
 {
   "expo": {
+    "entryPoint": "node_modules/expo/AppEntry.js",
     "name": "astroreco",
     "slug": "astroreco",
     "version": "1.0.0",
@@ -21,7 +22,15 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "build": {
+        "hermes": false
+      },
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+      
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }
