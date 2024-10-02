@@ -20,8 +20,8 @@ export default function RegisterScreen({ navigation }) {
       );
 
       // If registration is successful, navigate to Home
-      setSuccess('Registration successful! You can now log in.');
-      navigation.navigate('Login');
+      setSuccess('Registration successful! You can now complete onboarding.');
+      navigation.navigate('Onboarding', { username: data.username, password: data.password }); // Pass credentials
     } catch (err) {
       setError('Registration failed. Please try again.');
     }

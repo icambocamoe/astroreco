@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
 import { auth } from '../firebase.js'; // Import your firebase configuration
 
+
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
   const [error, setError] = useState('');
@@ -79,6 +80,8 @@ export default function LoginScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
+
+
     </View>
   );
 }
