@@ -2,6 +2,8 @@
 // Import the Firebase modules
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth'; // For authentication
+import { getFirestore } from "firebase/firestore";
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {

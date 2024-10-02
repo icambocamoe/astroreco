@@ -15,7 +15,7 @@ export default function LoginScreen({ navigation }) {
       // Use Firebase Authentication to sign in
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        data.username, // Email/username from form
+        data.useremail, // Email/username from form
         data.password  // Password from form
       );
 
@@ -40,10 +40,10 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.logincontainer}>
 
         <Text style={styles.screensName}>Show it's yourself!</Text>
-        <Text style={styles.label}>Username (Email)</Text>
+        <Text style={styles.label}>Email</Text>
         <Controller
           control={control}
-          name="username"
+          name="useremail"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={styles.input}
@@ -87,8 +87,6 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-
-
   container: {
     flex: 1,
     paddingHorizontal: 16,

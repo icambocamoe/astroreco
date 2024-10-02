@@ -15,7 +15,7 @@ export default function RegisterScreen({ navigation }) {
       // Use Firebase Authentication to register a new user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        data.username, // Email/username from form
+        data.useremail, // Email/username from form
         data.password  // Password from form
       );
 
@@ -38,10 +38,10 @@ export default function RegisterScreen({ navigation }) {
       </View>
       <View style={styles.logincontainer}>
         <Text style={styles.imagelabel}>Register to get your cosmic content!</Text>
-        <Text style={styles.label}>Username (Email)</Text>
+        <Text style={styles.label}>Email</Text>
         <Controller
           control={control}
-          name="username"
+          name="useremail"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={styles.input}
