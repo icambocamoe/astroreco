@@ -27,7 +27,8 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.imagecontainer}>
+        <Text style={styles.imagelabel}>Astromedia</Text>
         <Image
           source={require('../assets/logos astromedia.jpg')}
           style={styles.image}
@@ -35,62 +36,82 @@ export default function LoginScreen({ navigation }) {
       </View>
 
 
-      <Text style={styles.label}>Username (Email)</Text>
-      <Controller
-        control={control}
-        name="username"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-        )}
-      />
+      <View style={styles.logincontainer}>
 
-      <Text style={styles.label}>Password</Text>
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            secureTextEntry
-          />
-        )}
-      />
+        <Text style={styles.screensName}>Show it's yourself!</Text>
+        <Text style={styles.label}>Username (Email)</Text>
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+          )}
+        />
 
-      <Button title="Login" onPress={handleSubmit(onSubmit)} />
+        <Text style={styles.label}>Password</Text>
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              secureTextEntry
+            />
+          )}
+        />
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>
-          Don't have an account? Register
-        </Text>
-      </TouchableOpacity>
+        <Button title="Login" onPress={handleSubmit(onSubmit)} />
 
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={{ color: 'blue', textDecorationLine: 'underline', paddingTop: 20 }}>
+            Don't have an account? Register
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
 
+
+  container: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  imagecontainer: {
+    paddingTop: 50,
+  },
+  logincontainer: {
+    paddingTop: 100,
+  },
+  screensName: {
+    fontStyle: 'bold',
+    alignSelf: 'center',
+    fontSize: 36,
+    marginBottom: 20,
+  },
   image: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'center',  // This will center the image horizontally
     width: 200,
     height: 200,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
+  imagelabel: {
+    fontStyle: 'bold',
+    alignSelf: 'center',
+    fontSize: 48,
+    marginBottom: 20,
   },
   label: {
     fontSize: 18,
