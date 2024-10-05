@@ -1,19 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import { ScrollView, View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase.js'; // Import your Firebase configuration
+import { auth, db } from '../firebaseConfig.js'; // Import your Firebase configuration 
+import { updateDoc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import timezones from '../assets/objects/timezones.js';
 import RNPickerSelect from 'react-native-picker-select';
 import months from '../assets/objects/months.js';
 import CitySearch from './CitySearchScreen.js';
 
 const OnboardingScreen = ({ navigation, route }) => {
-    //const { useremail, password } = route.params; // Get email and password from navigation params
+    const { docRef } = route.params; // Get email and password from navigation params
+    let username;
+    let user;//userCredential.user.uid;
+    useEffect(() => {
+        const fetchDocument = async () => {
+            try {
+                // Fetching the document using Firestore's getDoc
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    console.log(docSnap.data());
+                    user = docSnap.data().userIDRef
+                    username = docSnap.data().name;
+                    // Update the `name` field in the form's values
+                    setValue('name', username);
+                } else {
+                    console.log("No such document!");
+                }
+            } catch (error) {
+                console.error("Error fetching document: ", error);
+            }
+        };
+
+        // Calling the function when the screen is loaded
+        fetchDocument();
+    }, []); // Empty dependency array ensures this runs only once when the screen loads
+
     const { control, handleSubmit, setValue, watch } = useForm({
         defaultValues: {
-            year: '2024',  
-            month: '1',          
+            year: '2024',
+            month: '1',
             day: '1',
             hour: '00',
             minute: '00',
@@ -67,7 +94,6 @@ const OnboardingScreen = ({ navigation, route }) => {
         setDays(Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()));
     };
 
-
     // Handle city selection with latitude and longitude update
     const handleCitySelection = (city) => {
         setValue('city', city.name);  // Update input with city name
@@ -84,143 +110,218 @@ const OnboardingScreen = ({ navigation, route }) => {
         return () => subscription.unsubscribe();
     }, [watch]);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         const formData = {
             ...data,
         };
         console.log('Collected data:', formData);
         // You can now handle this data (e.g., send it to your backend, navigate, etc.)
-        // navigation.navigate('Home');
+        await updateDoc(docRef, {
+            subject: formData,
+            updatedAt: serverTimestamp() // Update the timestamp as well
+        });
+        try {
+            // Fetching the document using Firestore's getDoc
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log(`subject docSnap.data():`);
+                console.log(docSnap.data())
+            } else {
+                console.log("No such document!");
+            }
+        } catch (error) {
+            console.error("Error fetching document: ", error);
+        }
+
+        const url = 'https://astrologer.p.rapidapi.com/api/v4/birth-chart';
+        const options = {
+            method: 'POST',
+            headers: {
+                'x-rapidapi-key': '861cf89b6bmsh5ee992a631165abp122b95jsn5c242c8cd7b8',
+                'x-rapidapi-host': 'astrologer.p.rapidapi.com',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                subject: {
+                    name: data.name, // Use the name from the form
+                    year: parseInt(data.year), // Ensure year is a number
+                    month: parseInt(data.month), // Ensure month is a number
+                    day: parseInt(data.day), // Ensure day is a number
+                    hour: parseInt(data.hour), // Ensure hour is a number
+                    minute: parseInt(data.minute), // Ensure minute is a number
+                    longitude: parseFloat(data.longitude), // Ensure longitude is a number
+                    latitude: parseFloat(data.latitude), // Ensure latitude is a number
+                    city: data.city,
+                    nation: data.nation,
+                    timezone: data.timezone,
+                    zodiac_type: data.zodiac_type // Use the zodiac type from the form
+                }
+            })
+        };
+
+        try {
+            const response = await fetch(url, options);
+            const result = await response.text();
+            console.log(`result: ${result}`);
+            await updateDoc(docRef, {
+                apiInfo: result,
+                updatedAt: serverTimestamp() // Update the timestamp as well
+            });
+            try {
+                // Fetching the document using Firestore's getDoc
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    console.log(`apiinfo docSnap.data():`);
+                    console.log(docSnap.data())
+                } else {
+                    console.log("No such document!");
+                }
+            } catch (error) {
+                console.error("Error fetching document: ", error);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        navigation.navigate('Home',{user});
     };
     return (
-        <View style={styles.container}>
-            <Text style={styles.header1}>Welcome to Astromedia!</Text>
-            <Text style={styles.headers}>Let's get your birth chart done!.</Text>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.container}>
+                <Text style={styles.header1}>Welcome to Astromedia!</Text>
+                <Text style={styles.headers}>Let's get your birth chart done!</Text>
 
-            <Text style={styles.label}>Full Name</Text>
-            <Controller
-                control={control}
-                name="username"
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                        style={styles.input}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        autoCapitalize="none"
-                        keyboardType="user-name"
-                    />
-                )}
-            />
+                <Text style={styles.sectionLabel}>Fecha de Nacimiento</Text>
+                <View style={styles.pickerGroup}>
+                    <View style={styles.pickerItem}>
+                        <Text style={styles.label}>Dia</Text>
+                        <Controller
+                            control={control}
+                            name="day"
+                            render={({ field: { onChange, value } }) => (
+                                <RNPickerSelect
+                                    value={value}
+                                    onValueChange={onChange}
+                                    items={days.map((day) => ({ label: day, value: day }))}
+                                    style={pickerSelectStyles}
+                                />
+                            )}
+                        />
+                    </View>
 
-            <Text style={styles.label}>Fecha de Nacimiento</Text>
-            <View style={styles.pickerContainer}>
-                <Text style={styles.label}>Dia</Text>
+                    <View style={styles.pickerItem}>
+                        <Text style={styles.label}>Mes</Text>
+                        <Controller
+                            control={control}
+                            name="month"
+                            render={({ field: { onChange, value } }) => (
+                                <RNPickerSelect
+                                    value={value}
+                                    onValueChange={onChange}
+                                    items={months}
+                                    style={pickerSelectStyles}
+                                />
+                            )}
+                        />
+                    </View>
+
+                    <View style={styles.pickerItem}>
+                        <Text style={styles.label}>Año</Text>
+                        <Controller
+                            control={control}
+                            name="year"
+                            render={({ field: { onChange, value } }) => (
+                                <RNPickerSelect
+                                    value={value}
+                                    onValueChange={onChange}
+                                    items={years}
+                                    style={pickerSelectStyles}
+                                />
+                            )}
+                        />
+                    </View>
+                </View>
+
+                <Text style={styles.sectionLabel}>Hora y Minuto</Text>
+                <View style={styles.pickerGroup}>
+                    <View style={styles.pickerItem}>
+                        <Text style={styles.label}>Hora</Text>
+                        <Controller
+                            control={control}
+                            name="hour"
+                            render={({ field: { onChange, value } }) => (
+                                <RNPickerSelect
+                                    value={value}
+                                    onValueChange={onChange}
+                                    items={hours}
+                                    style={pickerSelectStyles}
+                                />
+                            )}
+                        />
+                    </View>
+
+                    <View style={styles.pickerItem}>
+                        <Text style={styles.label}>Minuto</Text>
+                        <Controller
+                            control={control}
+                            name="minute"
+                            render={({ field: { onChange, value } }) => (
+                                <RNPickerSelect
+                                    value={value}
+                                    onValueChange={onChange}
+                                    items={minutes}
+                                    style={pickerSelectStyles}
+                                />
+                            )}
+                        />
+                    </View>
+                </View>
+
+                <CitySearch onCitySelected={handleCitySelection} />
+
+                <Text style={styles.label}>Select a Timezone:</Text>
                 <Controller
                     control={control}
-                    name="day"
+                    name="timezone"
                     render={({ field: { onChange, value } }) => (
                         <RNPickerSelect
                             value={value}
-                            onValueChange={onChange}
-                            items={days.map((day) => ({ label: day, value: day }))}
+                            onValueChange={(selectedTimezone) => {
+                                onChange(selectedTimezone);
+                                const selectedTimezoneObject = timezoneOptions.find(
+                                    (option) => option.value === selectedTimezone
+                                );
+                                if (selectedTimezoneObject) {
+                                    setValue('nation', selectedTimezoneObject.nation || '');
+                                }
+                            }}
+                            items={timezoneOptions}
+                            style={pickerSelectStyles}
+                            placeholder={{ label: 'Select a timezone...', value: null }}
                         />
                     )}
                 />
-                <Text style={styles.label}>Mes</Text>
-                <Controller
-                    control={control}
-                    name="month"
-                    render={({ field: { onChange, value } }) => (
-                        <RNPickerSelect
-                            value={value}
-                            onValueChange={onChange}
-                            items={months}
-                        />
-                    )}
-                />
-                <Text style={styles.label}>Año</Text>
-                <Controller
-                    control={control}
-                    name="year"
-                    render={({ field: { onChange, value } }) => (
-                        <RNPickerSelect
-                            value={value}
-                            onValueChange={onChange}
-                            items={years}
-                        />
-                    )}
-                />
+
+                <View style={styles.buttonContainer}>
+                    <Button title="Finish Onboarding" onPress={handleSubmit(onSubmit)} />
+                </View>
             </View>
-
-            <View style={styles.pickerContainer}>
-                <Text style={styles.label}>Hora</Text>
-                <Controller
-                    control={control}
-                    name="hour"
-                    render={({ field: { onChange, value } }) => (
-                        <RNPickerSelect
-                            value={value}
-                            onValueChange={onChange}
-                            items={hours}
-                        />
-                    )}
-                />
-                <Text style={styles.label}>Minuto</Text>
-                <Controller
-                    control={control}
-                    name="minute"
-                    render={({ field: { onChange, value } }) => (
-                        <RNPickerSelect
-                            value={value}
-                            onValueChange={onChange}
-                            items={minutes}
-                        />
-                    )}
-                />
-            </View>
-            <CitySearch onCitySelected={handleCitySelection} />
-            <Text style={styles.label}>Select a Timezone:</Text>
-            <Controller
-                control={control}
-                name="timezone"
-                render={({ field: { onChange, value } }) => (
-                    <RNPickerSelect
-                        value={value}
-                        onValueChange={(selectedTimezone) => {
-                            // Update the timezone value in the form
-                            onChange(selectedTimezone);
-            
-                            // Find the corresponding timezone object
-                            const selectedTimezoneObject = timezoneOptions.find(
-                                (option) => option.value === selectedTimezone
-                            );
-            
-                            // Set the nation field based on the selected timezone
-                            if (selectedTimezoneObject) {
-                                setValue('nation', selectedTimezoneObject.nation || ''); // Set the nation value
-                            }
-                        }}
-                        items={timezoneOptions}
-                        placeholder={{
-                            label: 'Select a timezone...',
-                            value: null,
-                        }}
-                    />
-                )}
-            />
-
-            <View style={{ margin: 20 }} ><Button title="Finish Onboarding" onPress={handleSubmit(onSubmit)} /></View>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    scrollViewContent: {
+        flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20
+    },
+    container: {
+        flex: 1,
+        width: '90%',
+        padding: 20,
+        alignItems: 'center',
     },
     input: {
         width: '100%',
@@ -228,7 +329,7 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 10,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
     header1: {
         fontSize: 36,
@@ -237,6 +338,28 @@ const styles = StyleSheet.create({
     headers: {
         fontSize: 18,
         marginBottom: 8,
+    },
+    label: {
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    sectionLabel: {
+        fontSize: 18,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    pickerGroup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        width: '100%',
+    },
+    pickerItem: {
+        width: '30%',
+    },
+    buttonContainer: {
+        margin: 20,
+        width: '100%',
     },
 });
 

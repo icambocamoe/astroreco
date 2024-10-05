@@ -1,0 +1,9 @@
+I1003 13:59:41.874885   29820 load.go:37] Reloading schema and connectors...
+I1003 13:59:41.906494   29820 control.go:45] [engine.Service /emulator/astroreco 310e] UpdateSchema(): done sources: schema\schema.gql [1384B] 
+I1003 13:59:41.917104   29820 control.go:73] [engine.Service /emulator/astroreco 310e] UpdateConnector(default): done sources: connector\mutations.gql [1163B] connector\queries.gql [1855B] 
+I1003 13:59:41.937514   29820 codegen.go:82] [connector "default" javascriptSdk] Generating sources into "C:\\Users\\jehuc\\modular\\astroreco\\generated\\javascript\\default"
+I1003 13:59:41.937514   29820 collector.go:107] schema extensions wrote into "C:\\Users\\jehuc\\modular\\astroreco\\dataconnect\\.dataconnect\\schema"
+Generated sources: prelude.gql [59310B] 
+I1003 13:59:41.947587   29820 collector.go:107] connector "default" javascriptSdk wrote into "C:\\Users\\jehuc\\modular\\astroreco\\generated\\javascript\\default"
+Generated sources: package.json [613B] index.d.ts [264B] esm\index.esm.js [182B] esm\package.json [17B] index.cjs.js [223B] 
+I1003 13:59:41.987349   29820 installsdk.go:79] Running command: C:\Program Files\nodejs\npm.cmd install file:generated\javascript\default

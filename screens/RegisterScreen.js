@@ -2,28 +2,55 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
-import { auth } from '../firebase.js'; // Import your firebase configuration
+import { getDocs, doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { auth, db } from '../firebaseConfig.js'; // Import your firebase configuration
 
 export default function RegisterScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Updated onSubmit function with Firebase Authentication
   const onSubmit = async (data) => {
     try {
       // Use Firebase Authentication to register a new user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        data.useremail, // Email/username from form
-        data.password  // Password from form
+        data.useremail, // Email from form
+        data.password    // Password from form
       );
+      console.log(`User created successfully:'${userCredential.user.uid}`);
+      const userUID = userCredential.user.uid;
+      let docRef;  // Declare docRef in a wider scope
+      // After user is created, save non-sensitive user data in Firestore
+      try {
+        //Storing user id reference in a document to userRefData collection
+        docRef = await addDoc(collection(db, "userRefData"), {
+          userIDRef: userUID,
+          name: data.username,
+          email: data.useremail,
+          createdAt: serverTimestamp(),
+          updatedAt:serverTimestamp(),
+        });
+        
+        /*
+        // Getting ref of collection
+        const usersCollection = collection(db, 'userRefData');
+        // Fetch the documents from the collection
+        const usersSnapshot = await getDocs(usersCollection);
+        // Extract data from each document
+        const usersList = usersSnapshot.docs.map(doc => doc.data().userIDRef);
+        console.log(`Userlist: ${usersList}`);  // Output the list of users
+         */
+      } catch (err) {
+        setError(`Cannot store credentials: ${err.message}`);
+        return; // Return early if there's an error storing credentials
+      }
 
-      // If registration is successful, navigate to Home
+      // If registration is successful, navigate to Onboarding
       setSuccess('Registration successful! You can now complete onboarding.');
-      navigation.navigate('Onboarding', { username: data.username, password: data.password }); // Pass credentials
+      navigation.navigate('Onboarding', {docRef}); // Pass username only
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      setError(`Registration failed: ${err.message}`); // Include the error message for better feedback
     }
   };
 
@@ -38,6 +65,22 @@ export default function RegisterScreen({ navigation }) {
       </View>
       <View style={styles.logincontainer}>
         <Text style={styles.imagelabel}>Register to get your cosmic content!</Text>
+
+        <Text style={styles.label}>Name</Text>
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              autoCapitalize="words"
+            />
+          )}
+        />
+
         <Text style={styles.label}>Email</Text>
         <Controller
           control={control}
@@ -81,6 +124,7 @@ export default function RegisterScreen({ navigation }) {
       </View>
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({

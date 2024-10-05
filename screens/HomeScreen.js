@@ -1,9 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
-import { auth } from '../firebase.js'; // Import Firebase auth
+import { auth, db } from '../firebaseConfig.js'; // Import Firebase auth
 import { signOut } from 'firebase/auth'; // Import Firebase signOut method
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore"; 
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
+  const { user } = route.params;
+  useEffect(() => {
+    const queryUserRefData = async () => {
+      try {
+        // Reference to the userRefData collection
+        const userRefCollection = collection(db, "userRefData");
+
+        // Create a query to filter by userIDRef
+        const q = query(userRefCollection, where("userIDRef", "==", user));
+        try {
+          // Execute the query
+          const querySnapshot = await getDocs(q);
+
+          // Iterate through the results
+          querySnapshot.forEach((doc) => {
+            console.log(`Document ID: ${doc.id}, Data: `, doc.data());
+          });
+
+        } catch (error) {
+          console.error("Error fetching user reference data: ", error);
+        }
+      } catch (err) {
+        console.error("Error fetching document: ", error);
+      }
+
+    };
+    // Calling the function when the screen is loaded
+    queryUserRefData();
+  }, [])
+
   // Function to handle sign out
   const handleSignOut = async () => {
     try {
@@ -18,7 +49,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Welcome to Astromedia!</Text>
-      
+
       <Image
         source={require('../assets/logos astromedia.jpg')} // Replace with your own image
         style={styles.image}
