@@ -12,7 +12,8 @@ import CitySearch from './CitySearchScreen.js';
 const OnboardingScreen = ({ navigation, route }) => {
     const { docRef } = route.params; // Get email and password from navigation params
     let username;
-    let user;//userCredential.user.uid;
+    let userUID;
+    const [user, setUser] = useState([]);//userCredential.user.uid;
     useEffect(() => {
         const fetchDocument = async () => {
             try {
@@ -20,11 +21,13 @@ const OnboardingScreen = ({ navigation, route }) => {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    console.log(docSnap.data());
-                    user = docSnap.data().userIDRef
+                    //console.log(docSnap.data());
+                    userUID = docSnap.data().userIDRef
                     username = docSnap.data().name;
                     // Update the `name` field in the form's values
                     setValue('name', username);
+                    setUser(userUID);
+                    //console.log("useEffect userIDRefser", user);
                 } else {
                     console.log("No such document!");
                 }
@@ -100,7 +103,7 @@ const OnboardingScreen = ({ navigation, route }) => {
         setValue('latitude', city.lat);   // Store latitude
         setValue('longitude', city.lng);  // Store longitude
 
-        console.log(`City: ${city.name}, Latitude: ${city.lat}, Longitude: ${city.lng}`);
+       // console.log(`City: ${city.name}, Latitude: ${city.lat}, Longitude: ${city.lng}`);
     };
 
     useEffect(() => {
@@ -114,7 +117,7 @@ const OnboardingScreen = ({ navigation, route }) => {
         const formData = {
             ...data,
         };
-        console.log('Collected data:', formData);
+        //console.log('Collected data:', formData);
         // You can now handle this data (e.g., send it to your backend, navigate, etc.)
         await updateDoc(docRef, {
             subject: formData,
@@ -162,8 +165,8 @@ const OnboardingScreen = ({ navigation, route }) => {
 
         try {
             const response = await fetch(url, options);
-            const result = await response.text();
-            console.log(`result: ${result}`);
+            const result = await response.json();
+           // console.log(`result: ${JSON.stringify(result)}`);
             await updateDoc(docRef, {
                 apiInfo: result,
                 updatedAt: serverTimestamp() // Update the timestamp as well
@@ -184,7 +187,8 @@ const OnboardingScreen = ({ navigation, route }) => {
         } catch (error) {
             console.error(error);
         }
-        navigation.navigate('Home',{user});
+        console.log("userIDRefser", user);
+        navigation.navigate('Home', { user });
     };
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContent}>

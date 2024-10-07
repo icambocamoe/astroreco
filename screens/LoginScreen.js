@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import { signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
+import {signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../firebaseConfig.js'; // Import your firebase configuration
 
@@ -13,6 +13,9 @@ export default function LoginScreen({ navigation }) {
   // Updated onSubmit function with Firebase Authentication
   const onSubmit = async (data) => {
     try {
+      // Set Firebase Authentication persistence to LOCAL
+      //await setPersistence(auth, browserLocalPersistence); // Use LOCAL persistence
+
       // Use Firebase Authentication to sign in
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -20,45 +23,17 @@ export default function LoginScreen({ navigation }) {
         data.password  // Password from form
       );
       const user = userCredential.user.uid;
-      console.log(user);
-      // Now you can fetch or store user data in Firestore
+      //console.log(user);
 
-      // After successful authentication, store non-sensitive user data in Firestore
-     /* await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
-        username: data.username, // Example additional data from form
-        createdAt: new Date() // Example timestamp
-      });*/
-      //await fetchUserData(user.uid);
       // If login is successful, navigate to Home
-      navigation.navigate('Home',{user});
+      navigation.navigate('Home', { user });
     } catch (err) {
       setError('Login failed. Check your credentials.');
       //fetchUserData(user.uid);
     }
   };
 
-  // Function to fetch user data
-  /* const fetchUserData = async (uid) => {
-     try {
-       console.log("Firestore database instance:", db);
-       console.log("User document path:", doc(db, "users", uid));
-       const userDocRef = doc(db, "users", uid);  // Get reference to document
-       console.log("User document path:", userDocRef.path);  // Logs the path of the document
-       const userDocSnap = await getDoc(userDocRef);  // Fetch document snapshot
-       // Log the result to see if userDocSnap is valid
-       console.log(userDocSnap);
- 
-       // Check if the document exists
-       if (userDocSnap.exists()) {
-         console.log("User data:", userDocSnap.data());
-       } else {
-         console.log("No user data found!");
-       }
-     } catch (error) {
-       console.error("Error fetching user data:", error);
-     }
-   };*/
+
   return (
     <View style={styles.container}>
       <View style={styles.imagecontainer}>

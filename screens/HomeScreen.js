@@ -1,39 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, ScrollView } from 'react-native';
 import { auth, db } from '../firebaseConfig.js'; // Import Firebase auth
 import { signOut } from 'firebase/auth'; // Import Firebase signOut method
-import { getFirestore, collection, query, where, getDocs } from "firebase/firestore"; 
+import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 
 export default function HomeScreen({ navigation, route }) {
   const { user } = route.params;
+  // Initialize state to store the documents
+  const [aspects, setAspects] = useState({});
+  const [chart, setChart] = useState({});
+  const [astrologicalData, setAstrologicalData] = useState({})
+
   useEffect(() => {
     const queryUserRefData = async () => {
+
       try {
         // Reference to the userRefData collection
         const userRefCollection = collection(db, "userRefData");
 
         // Create a query to filter by userIDRef
         const q = query(userRefCollection, where("userIDRef", "==", user));
+
         try {
           // Execute the query
           const querySnapshot = await getDocs(q);
-
           // Iterate through the results
           querySnapshot.forEach((doc) => {
-            console.log(`Document ID: ${doc.id}, Data: `, doc.data());
+            console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo.data);
+            // Set state with the document data
+            setAstrologicalData(doc.data().apiInfo.data);
           });
+
 
         } catch (error) {
           console.error("Error fetching user reference data: ", error);
         }
+
+
       } catch (err) {
         console.error("Error fetching document: ", error);
       }
-
     };
     // Calling the function when the screen is loaded
     queryUserRefData();
   }, [])
+
+  // Logging the state after updates
+  useEffect(() => {
+    console.log("Astrological Data: ", astrologicalData);
+  }, [astrologicalData]); // Logs state changes
+
 
   // Function to handle sign out
   const handleSignOut = async () => {
@@ -45,60 +61,106 @@ export default function HomeScreen({ navigation, route }) {
       console.error('Error signing out: ', error);
     }
   };
-
+  const PlanetCard = ({ planet }) => {
+    return (
+      <View style={styles.card}>
+        <Text style={styles.emoji}>{planet?.emoji}</Text>
+        <Text style={styles.planetName}>{planet?.name}</Text>
+        <Text>{`Sign: ${planet?.sign}`}</Text>
+        <Text>{`Element: ${planet?.element}`}</Text>
+        <Text>{`House: ${planet?.house?.replace(/_/g, ' ')}`}</Text>
+      </View>
+    );
+  };
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.welcome}>Welcome to Astromedia!</Text>
 
-      <Image
-        source={require('../assets/logos astromedia.jpg')} // Replace with your own image
-        style={styles.image}
-      />
+      <View >
+        <Image
+          source={require('../assets/logos astromedia.jpg')} // Replace with your own image
+          style={styles.image}
+        />
+      </View>
+
 
       <Text style={styles.text}>
         Get personalized media recommendations based on your astrological profile and horoscope.
       </Text>
+      <View>
+        <Text style={styles.header}>Astrology Data for {astrologicalData.name}</Text>
+        <Text style={styles.subheader}>Birth Info</Text>
+        <Text style={styles.info}>Date: {astrologicalData.year}-{astrologicalData.month}-{astrologicalData.day}</Text>
+        <Text style={styles.info}>Time: {astrologicalData.hour}:{astrologicalData.minute}</Text>
+        <Text style={styles.info}>City: {astrologicalData.city}</Text>
 
-      <Button
-        title="View Horoscope"
-        onPress={() => {
-          navigation.navigate('Horoscope');
-        }}
-      />
+        <Text style={styles.subheader}>Planets</Text>
+        <PlanetCard planet={astrologicalData.sun} />
+        <PlanetCard planet={astrologicalData.moon} />
+        {/* Add more PlanetCard components for other planets */}
+      </View>
 
-      <Button
-        title="Get Recommendations"
-        onPress={() => {
-          navigation.navigate('Recommendations');
-        }}
-      />
 
+      {/* You can keep the sign out button here */}
       <Button
         title="Sign Out"
-        onPress={handleSignOut} // Call the sign out function
-        color="red" // Optional: change button color for sign out
+        onPress={() => {
+          // Call your sign out function or navigate to login
+          navigation.replace('Login');
+        }}
+        color="red"
       />
-    </View>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+    padding: 20, // Combining padding from both containers
     backgroundColor: '#fff',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   welcome: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  subheader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  info: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  card: {
+    backgroundColor: '#f0f8ff',
+    padding: 15,
+    borderRadius: 8,
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  emoji: {
+    fontSize: 40,
+  },
+  planetName: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   image: {
     width: 200,
     height: 200,
     marginBottom: 20,
+    alignSelf: 'center',
   },
   text: {
     fontSize: 18,
@@ -106,4 +168,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
   },
-});
+};
+
