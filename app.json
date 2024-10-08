@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.icambocamoe.astroreco"
     },
     "web": {
       "build": {
@@ -29,10 +30,14 @@
       },
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
-      
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "43731b7a-0b39-487d-9673-1291d92f391d"
+      }
+    }
   }
 }

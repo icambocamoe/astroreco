@@ -22,7 +22,7 @@ function HomeTabs({ route }) {
   return (
     <Tab.Navigator>
       <Tab.Screen 
-        name="Home" 
+        name="BirthChart" 
         component={HomeScreen} 
         initialParams={{ user }} // Pass 'user' to HomeScreen
       />
