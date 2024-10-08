@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, Linking, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, FlatList, Button, Linking, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { updateDoc, getFirestore, collection, query, where, getDocs, doc, getDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from '../firebaseConfig.js'; // Import Firebase auth
 
@@ -48,7 +48,9 @@ export default function RecommendationsScreen({ route }) {
         // Calling the function when the screen is loaded
         queryUserRefData();
     }, [])
-
+    const openUrl = (url) => {
+        Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+    };
     // Helper function to render individual entries
     const renderItem = (item, index) => {
         return (
@@ -57,6 +59,11 @@ export default function RecommendationsScreen({ route }) {
                 <Text>Artist: {item.artist?.name}</Text>
                 <Text>Duration: {item.duration} seconds</Text>
                 <Image source={{ uri: item.image[0]["#text"] }} style={styles.image} />
+
+                {/* Touchable link to open the URL */}
+                <TouchableOpacity onPress={() => openUrl(item.url)}>
+                    <Text style={styles.link}>Listen on Last.fm</Text>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -79,23 +86,26 @@ export default function RecommendationsScreen({ route }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
+        padding: 10,
     },
-    header: {
+    categoryTitle: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginVertical: 10,
     },
-    horoscopeText: {
-        fontSize: 16,
-        marginBottom: 20,
+    card: {
+        backgroundColor: '#f9f9f9',
+        padding: 10,
+        marginVertical: 5,
+        borderRadius: 8,
     },
-    songItem: {
-        marginBottom: 20,
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
-    songTitle: {
-        fontSize: 16,
+    image: {
+        width: 100,
+        height: 100,
+        marginVertical: 10,
     },
 });
