@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
 import { getDocs, doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from '../firebaseConfig.js'; // Import your firebase configuration
+import { stylesAppTheme } from '../theme/AppTheme.js';
+
 
 export default function RegisterScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
@@ -54,116 +56,107 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imagecontainer}>
-        <Text style={styles.imagelabel}>Astromedia</Text>
+    <ScrollView>
+    <View style={stylesAppTheme.container}>
+      <View style={stylesAppTheme.imagecontainer}>
+        <Text style={stylesAppTheme.imagelabel}>Astromedia</Text>
         <Image
           source={require('../assets/logos astromedia.jpg')}
-          style={styles.image}
+          style={stylesAppTheme.image}
         />
       </View>
-      <View style={styles.logincontainer}>
-        <Text style={styles.imagelabel}>Register to get your cosmic content!</Text>
+      <View style={stylesAppTheme.logincontainer}>
+        <Text style={stylesAppTheme.screensName}>Register to get your cosmic content!</Text>
 
-        <Text style={styles.label}>Name</Text>
+        {/* <Text style={styles.label}>Name</Text> */}
         <Controller
           control={control}
           name="username"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              style={styles.input}
+              style={stylesAppTheme.input}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
               autoCapitalize="words"
+              placeholder="Name" 
+              placeholderTextColor="#888" 
             />
           )}
         />
 
-        <Text style={styles.label}>Email</Text>
+        {/* <Text style={styles.label}>Email</Text> */}
         <Controller
           control={control}
           name="useremail"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              style={styles.input}
+              style={stylesAppTheme.input}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
               autoCapitalize="none"
               keyboardType="email-address"
+              placeholder="Email" 
+              placeholderTextColor="#888" 
             />
           )}
         />
 
-        <Text style={styles.label}>Password</Text>
+        {/* <Text style={styles.label}>Password</Text> */}
         <Controller
           control={control}
           name="password"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              style={styles.input}
+              style={stylesAppTheme.input}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
               secureTextEntry
+              placeholder="Password" 
+              placeholderTextColor="#888" 
             />
           )}
         />
 
-        <Button title="Register" onPress={handleSubmit(onSubmit)} />
+        {/* <Button title="Register" onPress={handleSubmit(onSubmit)} /> */}
+
+        <TouchableOpacity
+            style={stylesAppTheme.button}
+            onPress={handleSubmit(onSubmit)}
+          >
+            <Text style={stylesAppTheme.buttonText}>register</Text>
+          </TouchableOpacity>
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {success ? <Text style={styles.success}>{success}</Text> : null}
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={{ color: 'blue', textDecorationLine: 'underline', paddingTop: 20 }}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')} style={stylesAppTheme.touchableLink}>
+          <Text style={stylesAppTheme.linkText}>
             Already have an account? Login
           </Text>
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
+    
   );
 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  imagecontainer: {
-    paddingTop: 50,
-  },
-  logincontainer: {
-    paddingTop: 100,
-  },
-  image: {
-    alignSelf: 'center',  // This will center the image horizontally
-    width: 200,
-    height: 200,
-  },
+
   screensName: {
     fontStyle: 'bold',
     alignSelf: 'center',
     fontSize: 24,
     paddingTop: 20
   },
-  imagelabel: {
-    fontStyle: 'bold',
-    alignSelf: 'center',
-    fontSize: 24,
-    marginBottom: 8,
-  },
-  label: {
+
+ /*  label: {
     fontSize: 18,
     marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 12,
-    borderRadius: 4,
-  },
+  }, */
   error: {
     color: 'red',
     marginTop: 10,
