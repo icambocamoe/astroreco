@@ -10,6 +10,8 @@ export default function HoroscopeScreen({ route }) {
   const { user } = route.params;
   const [horoscope, setHoroscope] = useState({});
   const [songs, setSongs] = useState({});
+  const [horoscopeFlag, setHoroscopeFlag] = useState(false);
+  const [songsFlag, setSongsFlag] = useState(false);
   const [sunSign, setSunSign] = useState('');
   const [docRef, setDocRef] = useState('');
 
@@ -61,7 +63,7 @@ export default function HoroscopeScreen({ route }) {
     setSongs(songsDictionary);
     console.log(songsDictionary);
     await updateDoc(docRef, {
-      recommendedSongs: result,
+      recommendedSongs: songsDictionary,
       updatedAt: serverTimestamp() // Update the timestamp as well
     });
   };
@@ -116,8 +118,24 @@ export default function HoroscopeScreen({ route }) {
           querySnapshot.forEach((doc) => {
             console.log(`Document ID: ${doc.id}, Data: `, getZodiacName(doc.data().apiInfo.data.sun.sign));
             // Set state with the document data
-            
+
             setSunSign(getZodiacName(doc.data().apiInfo.data.sun.sign));
+            if (doc.data().horoscope) {
+              console.log("hay horoscopo")
+              console.log(doc.data().horoscope)
+              setHoroscope(doc.data().horoscope)
+              setHoroscopeFlag(true)
+            } else {
+              console.log("no hay horoscopo")
+            }
+            if (doc.data().recommendedSongs) {
+              console.log("hay recommendedsongs")
+              console.log(doc.data().recommendedSongs)
+              setSongs(doc.data().recommendedSongs)
+              setSongsFlag(true)
+            } else {
+              console.log("no hay recommendedsongs")
+            }
             setDocRef(doc.ref)
           });
 
@@ -136,6 +154,10 @@ export default function HoroscopeScreen({ route }) {
   }, [])
 
   useEffect(() => {
+    if (horoscopeFlag) {
+      console.log('ya está el horoscopo');
+      return; // Early return to avoid the else
+    }
     const options = {
       method: 'GET',
       url: 'https://horoscope-astrology.p.rapidapi.com/horoscope',
@@ -149,10 +171,12 @@ export default function HoroscopeScreen({ route }) {
       }
     };
     getHoroscope(options);
-  }, [sunSign]); // Call extractThemes whenever text changesF
+
+
+  }, [sunSign, horoscopeFlag]); // Call extractThemes whenever text changesF
 
   const updateDocRef = async () => {
-   
+
     try {
       // Fetching the document using Firestore's getDoc
       const docSnap = await getDoc(docRef);
@@ -168,8 +192,12 @@ export default function HoroscopeScreen({ route }) {
     }
   };
   useEffect(() => {
+    if (songsFlag) {
+      console.log('ya están las canciones');
+      return; // Early return to avoid the else
+    }
     analyzeSentiment();
-  }, [horoscope]);
+  }, [horoscope, songsFlag]);
 
   return (
     <View style={styles.container}>

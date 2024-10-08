@@ -1,86 +1,79 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, Linking, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Button, Linking, StyleSheet, ScrollView, Image } from 'react-native';
+import { updateDoc, getFirestore, collection, query, where, getDocs, doc, getDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from '../firebaseConfig.js'; // Import Firebase auth
+
 
 export default function RecommendationsScreen({ route }) {
     const { user } = route.params;
-    
+    const [songs, setSongs] = useState({});
 
-    // Get Spotify Access Token using fetch
-    const getSpotifyAccessToken = async () => {
-        const clientId = 'YOUR_SPOTIFY_CLIENT_ID';
-        const clientSecret = 'YOUR_SPOTIFY_CLIENT_SECRET';
-        const credentials = btoa(`${clientId}:${clientSecret}`); // Base64 encode clientId:clientSecret
 
-        try {
-            const response = await fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Basic ${credentials}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'grant_type=client_credentials', // Body as a string
-            });
-
-            const data = await response.json();
-            return data.access_token;
-        } catch (error) {
-            console.error('Error fetching Spotify access token:', error);
-        }
-    };
-
-    // Search for Songs Based on Horoscope Theme using fetch
-    const searchSpotifySongs = async (theme) => {
-        const token = await getSpotifyAccessToken();
-
-        try {
-            const response = await fetch(
-                `https://api.spotify.com/v1/search?q=${theme}&type=track&limit=5`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            const data = await response.json();
-            setSongs(data.tracks.items); // Set the songs in state
-        } catch (error) {
-            console.error('Error fetching songs from Spotify:', error);
-        }
-    };
-
-    // Fetch Horoscope and Songs on Mount
     useEffect(() => {
-        (async () => {
-            const horoscopeText = await getHoroscope();
-            searchSpotifySongs('motivation');  // You can extract themes from horoscopeText here
-        })();
-    }, []);
+        const queryUserRefData = async () => {
+
+            try {
+                // Reference to the userRefData collection
+                const userRefCollection = collection(db, "userRefData");
+
+                // Create a query to filter by userIDRef
+                const q = query(userRefCollection, where("userIDRef", "==", user));
+
+                try {
+                    // Execute the query
+                    const querySnapshot = await getDocs(q);
+                    // Iterate through the results
+                    querySnapshot.forEach((doc) => {
+                        // Set state with the document data
+
+                        if (doc.data().recommendedSongs) {
+                            console.log("hay recommendedsongs")
+                            console.log(doc.data().recommendedSongs)
+                            setSongs(doc.data().recommendedSongs)
+                        } else {
+                            console.log("no hay recommendedsongs")
+                        }
+                    });
+
+
+                } catch (error) {
+                    console.error("Error fetching user reference data: ", error);
+                }
+
+
+            } catch (err) {
+                console.error("Error fetching document: ", err);
+            }
+        };
+        // Calling the function when the screen is loaded
+        queryUserRefData();
+    }, [])
+
+    // Helper function to render individual entries
+    const renderItem = (item, index) => {
+        return (
+            <View key={index} style={styles.card}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text>Artist: {item.artist?.name}</Text>
+                <Text>Duration: {item.duration} seconds</Text>
+                <Image source={{ uri: item.image[0]["#text"] }} style={styles.image} />
+            </View>
+        );
+    };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>Horoscope for {zodiacSign}</Text>
-            <Text style={styles.horoscopeText}>{horoscope}</Text>
-
-            <FlatList
-                data={songs}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={styles.songItem}>
-                        <Text style={styles.songTitle}>
-                            {item.name} by {item.artists[0].name}
-                        </Text>
-                        <Button
-                            title="Play Preview"
-                            onPress={() => {
-                                Linking.openURL(item.preview_url);
-                            }}
-                        />
-                    </View>
-                )}
-            />
-        </View>
+        <ScrollView style={styles.container}>
+            {Object.keys(songs).map((category, index) => (
+                <View key={index}>
+                    <Text style={styles.categoryTitle}>{category.toUpperCase()}</Text>
+                    {songs[category].length > 0 ? (
+                        songs[category].map(renderItem)
+                    ) : (
+                        <Text>No items in this category.</Text>
+                    )}
+                </View>
+            ))}
+        </ScrollView>
     );
 };
 
