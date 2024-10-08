@@ -120,22 +120,56 @@ export default function HoroscopeScreen({ route }) {
             // Set state with the document data
 
             setSunSign(getZodiacName(doc.data().apiInfo.data.sun.sign));
-            if (doc.data().horoscope) {
-              console.log("hay horoscopo")
-              console.log(doc.data().horoscope)
-              setHoroscope(doc.data().horoscope)
-              setHoroscopeFlag(true)
+            // Get current date
+            const currentDate = new Date();
+            const apiDate = doc.data().horoscope.date;
+            // Format date as needed
+            const formattedDate = currentDate.toDateString(); // Example: "Mon Oct 08 2024"
+            // Regex to extract components from API date
+            const apiDateRegex = /([a-zA-Z]{3}),\s(\d{2})\s([a-zA-Z]{3})\s(\d{4})/;
+            const apiMatch = apiDate.match(apiDateRegex);
+
+            // Regex to extract components from formatted date
+            const formattedDateRegex = /([a-zA-Z]{3})\s([a-zA-Z]{3})\s(\d{2})\s(\d{4})/;
+            const formattedMatch = formattedDate.match(formattedDateRegex);
+
+            // Compare both matches
+            if (apiMatch && formattedMatch) {
+              const [, apiDayOfWeek, apiDay, apiMonth, apiYear] = apiMatch;
+              const [, formattedDayOfWeek, formattedMonth, formattedDay, formattedYear] = formattedMatch;
+
+              // Check if both dates are the same
+              const isSameDate =
+                apiDayOfWeek === formattedDayOfWeek &&
+                apiDay === formattedDay &&
+                apiMonth === formattedMonth &&
+                apiYear === formattedYear;
+
+              console.log(isSameDate ? "The dates are the same!" : "The dates are different.");
+              if (isSameDate) {
+                //si la fecha es la de hoy ponemos los datos que son de hoy, 
+                if (doc.data().horoscope) {
+                  console.log("hay horoscopo")
+                  setHoroscope(doc.data().horoscope)
+                  setHoroscopeFlag(true)
+                } else {
+                  console.log("no hay horoscopo")
+                }
+                if (doc.data().recommendedSongs) {
+                  console.log("hay recommendedsongs")
+                  console.log(doc.data().recommendedSongs)
+                  setSongs(doc.data().recommendedSongs)
+                  setSongsFlag(true)
+                } else {
+                  console.log("no hay recommendedsongs")
+                }
+              } else {
+                console.log("we need to fetch today's horoscope");
+              }
             } else {
-              console.log("no hay horoscopo")
+              console.log("Invalid date format.");
             }
-            if (doc.data().recommendedSongs) {
-              console.log("hay recommendedsongs")
-              console.log(doc.data().recommendedSongs)
-              setSongs(doc.data().recommendedSongs)
-              setSongsFlag(true)
-            } else {
-              console.log("no hay recommendedsongs")
-            }
+
             setDocRef(doc.ref)
           });
 
@@ -157,21 +191,21 @@ export default function HoroscopeScreen({ route }) {
     if (horoscopeFlag) {
       console.log('ya está el horoscopo');
       return; // Early return to avoid the else
+    } else {
+      const options = {
+        method: 'GET',
+        url: 'https://horoscope-astrology.p.rapidapi.com/horoscope',
+        params: {
+          day: 'today',
+          sunsign: sunSign
+        },
+        headers: {
+          'x-rapidapi-key': '2d2f1d9305mshe94bce5818fa2a9p1a5f00jsn140ed873e2a4',
+          'x-rapidapi-host': 'horoscope-astrology.p.rapidapi.com'
+        }
+      };
+      getHoroscope(options);
     }
-    const options = {
-      method: 'GET',
-      url: 'https://horoscope-astrology.p.rapidapi.com/horoscope',
-      params: {
-        day: 'today',
-        sunsign: sunSign
-      },
-      headers: {
-        'x-rapidapi-key': '2d2f1d9305mshe94bce5818fa2a9p1a5f00jsn140ed873e2a4',
-        'x-rapidapi-host': 'horoscope-astrology.p.rapidapi.com'
-      }
-    };
-    getHoroscope(options);
-
 
   }, [sunSign, horoscopeFlag]); // Call extractThemes whenever text changesF
 
