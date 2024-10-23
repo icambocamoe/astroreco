@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation, route }) {
           const querySnapshot = await getDocs(q);
           // Iterate through the results
           querySnapshot.forEach((doc) => {
-            console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo.data);
+            console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo );
             // Set state with the document data
             setAstrologicalData(doc.data().apiInfo.data);
           });
@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation, route }) {
 
 
       } catch (err) {
-        console.error("Error fetching document: ", error);
+        console.error("Error fetching document: ", err);
       }
     };
     // Calling the function when the screen is loaded
@@ -97,6 +97,15 @@ export default function HomeScreen({ navigation, route }) {
         <Text style={styles.subheader}>Planets</Text>
         <PlanetCard planet={astrologicalData.sun} />
         <PlanetCard planet={astrologicalData.moon} />
+        <PlanetCard planet={astrologicalData.mercury} />
+        <PlanetCard planet={astrologicalData.venus} />
+        <PlanetCard planet={astrologicalData.mars} />
+        <PlanetCard planet={astrologicalData.jupiter} />
+        <PlanetCard planet={astrologicalData.saturn} />
+        <PlanetCard planet={astrologicalData.uranus} />
+        <PlanetCard planet={astrologicalData.neptune} />
+        <PlanetCard planet={astrologicalData.pluto} />
+        
         {/* Add more PlanetCard components for other planets */}
       </View>
 
@@ -117,7 +126,8 @@ export default function HomeScreen({ navigation, route }) {
 const styles = {
   container: {
     flex: 1,
-    padding: 20, // Combining padding from both containers
+    paddingHorizontal: 20,
+    padding:50, // Combining padding from both containers
     backgroundColor: '#fff',
   },
   header: {

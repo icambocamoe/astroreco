@@ -171,19 +171,7 @@ const OnboardingScreen = ({ navigation, route }) => {
                 apiInfo: result,
                 updatedAt: serverTimestamp() // Update the timestamp as well
             });
-            try {
-                // Fetching the document using Firestore's getDoc
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    console.log(`apiinfo docSnap.data():`);
-                    console.log(docSnap.data())
-                } else {
-                    console.log("No such document!");
-                }
-            } catch (error) {
-                console.error("Error fetching document: ", error);
-            }
+ 
         } catch (error) {
             console.error(error);
         }

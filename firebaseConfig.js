@@ -20,6 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 
+
 // Conditionally initialize authentication based on platform
 let auth;
 if (Platform.OS !== 'web') {
@@ -33,11 +34,12 @@ if (Platform.OS !== 'web') {
 }
 const db = getFirestore(app);
 
+/*
+const machineIP = "192.168.100.66"; // Replace with your machine's actual IP address
 
-//const machineIP = "192.168.100.66"; // Replace with your machine's actual IP address
 
 //connectFirestoreEmulator(db, machineIP, 8080); // Firestore emulator
 //connectAuthEmulator(auth, `http://${machineIP}:9099`); // Auth emulator
 
-
+*/
 export { auth, db };
