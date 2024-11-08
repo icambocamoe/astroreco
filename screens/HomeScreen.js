@@ -6,6 +6,7 @@ import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "fi
 
 export default function HomeScreen({ navigation, route }) {
   const { user } = route.params;
+  console.log('home',user)
   // Initialize state to store the documents
   const [aspects, setAspects] = useState({});
   const [chart, setChart] = useState({});
@@ -20,13 +21,14 @@ export default function HomeScreen({ navigation, route }) {
 
         // Create a query to filter by userIDRef
         const q = query(userRefCollection, where("userIDRef", "==", user));
-
+        console.log(q)
         try {
           // Execute the query
           const querySnapshot = await getDocs(q);
+          console.log(querySnapshot.docs)
           // Iterate through the results
           querySnapshot.forEach((doc) => {
-            console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo );
+            console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo);
             // Set state with the document data
             setAstrologicalData(doc.data().apiInfo.data);
           });
@@ -46,10 +48,10 @@ export default function HomeScreen({ navigation, route }) {
   }, [])
 
   // Logging the state after updates
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("Astrological Data: ", astrologicalData);
   }, [astrologicalData]); // Logs state changes
-
+*/
 
   // Function to handle sign out
   const handleSignOut = async () => {
@@ -105,7 +107,7 @@ export default function HomeScreen({ navigation, route }) {
         <PlanetCard planet={astrologicalData.uranus} />
         <PlanetCard planet={astrologicalData.neptune} />
         <PlanetCard planet={astrologicalData.pluto} />
-        
+
         {/* Add more PlanetCard components for other planets */}
       </View>
 
@@ -127,7 +129,7 @@ const styles = {
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    padding:50, // Combining padding from both containers
+    padding: 50, // Combining padding from both containers
     backgroundColor: '#fff',
   },
   header: {

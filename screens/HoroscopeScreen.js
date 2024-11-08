@@ -14,6 +14,7 @@ export default function HoroscopeScreen({ route }) {
   const [songsFlag, setSongsFlag] = useState(false);
   const [sunSign, setSunSign] = useState('');
   const [docRef, setDocRef] = useState('');
+  const [movies, setMovies] = useState({});
 
   const [sentimentResult, setSentimentResult] = useState(null);
   const sentiment = new Sentiment();
@@ -29,7 +30,7 @@ export default function HoroscopeScreen({ route }) {
     "Sco": "scorpio",
     "Sag": "sagittarius",
     "Sap": "capricorn",
-    "Squ": "aquarius",
+    "Aqu": "aquarius",
     "Pis": "pisces"
   };
 
@@ -44,40 +45,79 @@ export default function HoroscopeScreen({ route }) {
   }
 
   const analyzeSentiment = async () => {
-    const result = sentiment.analyze(horoscope.horoscope);
-    setSentimentResult(result);
-    console.log(result);
+    if (horoscope && Object.keys(horoscope).length > 0) {
+      console.log(horoscope)
+      const result = sentiment.analyze(horoscope.horoscope);
+      setSentimentResult(result);
+      console.log(result);
 
-    // Create a dictionary to hold words and their corresponding songs
-    const songsDictionary = {};
+      // Create a dictionary to hold words and their corresponding songs
+      const songsDictionary = {};
+      const moviesDictionary = {};
+      // Fetch songs for each word and populate the dictionary
+      await Promise.all(
+        result.words.map(async (word) => {
+          const songsData = await fetchTracksByTheme(word);
+          songsDictionary[word] = songsData; // Assign the songs to the word in the dictionary
+        })
+      );
+      await Promise.all(
+        result.words.map(async (word) => {
+          const moviesData = await getMovies(word);
+          moviesDictionary[word] = moviesData;
+        })
+      );
 
-    // Fetch songs for each word and populate the dictionary
-    await Promise.all(
-      result.words.map(async (word) => {
-        const songsData = await fetchTracksByTheme(word);
-        songsDictionary[word] = songsData; // Assign the songs to the word in the dictionary
-      })
-    );
-
-    // Update state with the songs dictionary
-    setSongs(songsDictionary);
-    console.log(songsDictionary);
-    await updateDoc(docRef, {
-      recommendedSongs: songsDictionary,
-      updatedAt: serverTimestamp() // Update the timestamp as well
-    });
+      // Update state with the songs dictionary
+      setSongs(songsDictionary);
+      setMovies(moviesDictionary);
+      console.log("canciones ", songsDictionary);
+      await updateDoc(docRef, {
+        recommendedSongs: songsDictionary,
+        recommendedMovies: moviesDictionary,
+        updatedAt: serverTimestamp() // Update the timestamp as well
+      });
+    }
   };
 
-
-  // Extract themes on component mount
-  const getHoroscope = async (options) => {
+  const getMovies = async (theme) => {
+    const options = {
+      method: 'GET',
+      url: 'https://unogs-unogs-v1.p.rapidapi.com/search/titles',
+      params: {
+        order_by: 'rating',
+        limit: '3',
+        title: theme
+      },
+      headers: {
+        'x-rapidapi-key': '861cf89b6bmsh5ee992a631165abp122b95jsn5c242c8cd7b8',
+        'x-rapidapi-host': 'unogs-unogs-v1.p.rapidapi.com'
+      }
+    };
     try {
-      console.log(options.sunsign)
       const response = await axios.request(options);
-      setHoroscope(response.data)
+      console.log('movies',response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
+  // Extract themes on component mount
+  const getHoroscope = async (options, formattedDate) => {
+    try {
+      //console.log(options.sunsign)
+      const response = await axios.request(options);
+      setHoroscope({
+        horoscope: response.data.message,
+        date: formattedDate
+      })
       console.log(response.data);
       await updateDoc(docRef, {
-        horoscope: response.data,
+        horoscope: {
+          horoscope: response.data.message,
+          date: formattedDate
+        },
         updatedAt: serverTimestamp() // Update the timestamp as well
       });
     } catch (error) {
@@ -116,59 +156,41 @@ export default function HoroscopeScreen({ route }) {
           const querySnapshot = await getDocs(q);
           // Iterate through the results
           querySnapshot.forEach((doc) => {
-            console.log(`Document ID: ${doc.id}, Data: `, getZodiacName(doc.data().apiInfo.data.sun.sign));
-            // Set state with the document data
 
             setSunSign(getZodiacName(doc.data().apiInfo.data.sun.sign));
             // Get current date
             const currentDate = new Date();
-            const apiDate = doc.data().horoscope.date;
-            // Format date as needed
-            const formattedDate = currentDate.toDateString(); // Example: "Mon Oct 08 2024"
-            // Regex to extract components from API date
-            const apiDateRegex = /([a-zA-Z]{3}),\s(\d{2})\s([a-zA-Z]{3})\s(\d{4})/;
-            const apiMatch = apiDate.match(apiDateRegex);
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed 
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            const fbDate = doc.data().horoscope.date;
 
-            // Regex to extract components from formatted date
-            const formattedDateRegex = /([a-zA-Z]{3})\s([a-zA-Z]{3})\s(\d{2})\s(\d{4})/;
-            const formattedMatch = formattedDate.match(formattedDateRegex);
+            let isSameDate = formattedDate == fbDate;
 
-            // Compare both matches
-            if (apiMatch && formattedMatch) {
-              const [, apiDayOfWeek, apiDay, apiMonth, apiYear] = apiMatch;
-              const [, formattedDayOfWeek, formattedMonth, formattedDay, formattedYear] = formattedMatch;
-
-              // Check if both dates are the same
-              const isSameDate =
-                apiDayOfWeek === formattedDayOfWeek &&
-                apiDay === formattedDay &&
-                apiMonth === formattedMonth &&
-                apiYear === formattedYear;
-
-              console.log(isSameDate ? "The dates are the same!" : "The dates are different.");
-              if (isSameDate) {
-                //si la fecha es la de hoy ponemos los datos que son de hoy, 
-                if (doc.data().horoscope) {
-                  console.log("hay horoscopo")
-                  setHoroscope(doc.data().horoscope)
-                  setHoroscopeFlag(true)
-                } else {
-                  console.log("no hay horoscopo")
-                }
-                if (doc.data().recommendedSongs) {
-                  console.log("hay recommendedsongs")
-                  console.log(doc.data().recommendedSongs)
-                  setSongs(doc.data().recommendedSongs)
-                  setSongsFlag(true)
-                } else {
-                  console.log("no hay recommendedsongs")
-                }
+            console.log(isSameDate ? "The dates are the same!" : "The dates are different.");
+            if (isSameDate) {
+              //si la fecha es la de hoy ponemos los datos que son de hoy, 
+              if (doc.data().horoscope) {
+                console.log("hay horoscopo")
+                setHoroscopeFlag(true)
+                setHoroscope(doc.data().horoscope)
               } else {
-                console.log("we need to fetch today's horoscope");
+                console.log("no hay horoscopo")
+              }
+              if (Object.keys(doc.data().recommendedSongs).length > 0) {
+                console.log("hay recommendedsongs")
+                console.log(doc.data().recommendedSongs)
+                setSongs(doc.data().recommendedSongs)
+                setSongsFlag(true)
+              } else {
+                console.log("no hay recommendedsongs")
+                analyzeSentiment();
               }
             } else {
-              console.log("Invalid date format.");
+              console.log("we need to fetch today's horoscope");
             }
+
 
             setDocRef(doc.ref)
           });
@@ -187,24 +209,32 @@ export default function HoroscopeScreen({ route }) {
     queryUserRefData();
   }, [])
 
+  // make an express api to fetch this
   useEffect(() => {
     if (horoscopeFlag) {
       console.log('ya está el horoscopo');
       return; // Early return to avoid the else
     } else {
-      const options = {
-        method: 'GET',
-        url: 'https://horoscope-astrology.p.rapidapi.com/horoscope',
-        params: {
-          day: 'today',
-          sunsign: sunSign
-        },
-        headers: {
-          'x-rapidapi-key': '2d2f1d9305mshe94bce5818fa2a9p1a5f00jsn140ed873e2a4',
-          'x-rapidapi-host': 'horoscope-astrology.p.rapidapi.com'
-        }
-      };
-      getHoroscope(options);
+      if (sunSign) {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed 
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        const options = {
+          method: 'GET',
+          url: 'https://daily-horoscope8.p.rapidapi.com/daily',
+          params: {
+            sign: sunSign,
+            date: formattedDate
+          },
+          headers: {
+            'x-rapidapi-key': '2d2f1d9305mshe94bce5818fa2a9p1a5f00jsn140ed873e2a4',
+            'x-rapidapi-host': 'daily-horoscope8.p.rapidapi.com'
+          }
+        };
+        getHoroscope(options, formattedDate);
+      }
     }
 
   }, [sunSign, horoscopeFlag]); // Call extractThemes whenever text changesF
@@ -238,7 +268,6 @@ export default function HoroscopeScreen({ route }) {
       <Text style={styles.title}>Horoscope</Text>
       <Text style={styles.date}>{horoscope.date}</Text>
       <Text style={styles.horoscope}>{horoscope.horoscope}</Text>
-      <Text style={styles.luckyNumber}>Lucky Number: {horoscope.lucky_number}</Text>
     </View>
   );
 };
@@ -249,6 +278,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,

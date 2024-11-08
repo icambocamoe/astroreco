@@ -7,6 +7,8 @@ import { StyleSheet } from "react-native";
 
 export const stylesAppTheme = StyleSheet.create({
   container: {
+    paddingVertical: 10,
+    marginBottom:50,
     flex: 1,
     paddingHorizontal: 16,
     backgroundColor: "#f0f6fc",

@@ -1,0 +1,55 @@
+[debug] [2024-10-07T01:13:30.347Z] ----------------------------------------------------------------------
+[debug] [2024-10-07T01:13:30.356Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\jehuc\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2024-10-07T01:13:30.356Z] CLI Version:   13.20.2
+[debug] [2024-10-07T01:13:30.357Z] Platform:      win32
+[debug] [2024-10-07T01:13:30.357Z] Node Version:  v20.17.0
+[debug] [2024-10-07T01:13:30.357Z] Time:          Sun Oct 06 2024 19:13:30 GMT-0600 (hora estándar central)
+[debug] [2024-10-07T01:13:30.357Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-07T01:13:30.526Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-07T01:13:30.526Z] > authorizing via signed-in user (jacobo.gonzalez8866@alumnos.udg.mx)
+[debug] [2024-10-07T01:13:30.685Z] java version "22.0.2" 2024-07-16
+
+[debug] [2024-10-07T01:13:30.686Z] Java(TM) SE Runtime Environment (build 22.0.2+9-70)
+Java HotSpot(TM) 64-Bit Server VM (build 22.0.2+9-70, mixed mode, sharing)
+
+[debug] [2024-10-07T01:13:30.714Z] Parsed Java major version: 22
+[info] i  emulators: Starting emulators: auth, firestore {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, firestore"}}
+[debug] [2024-10-07T01:13:30.729Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[warn] !  ui: Emulator UI unable to start on port 4000, starting on 4001 instead. {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI unable to start on port 4000, starting on 4001 instead."}}
+[debug] [2024-10-07T01:13:30.732Z] assigned listening specs for emulators {"user":{"auth":[{"address":"192.168.100.66","family":"IPv4","port":9099}],"firestore":[{"address":"192.168.100.66","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"192.168.100.66","family":"IPv4","port":9150}],"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4001},{"address":"::1","family":"IPv6","port":4001}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[warn] !  emulators: It seems that you are running multiple instances of the emulator suite for project astromedia-modular. This may result in unexpected behavior. 
+[debug] [2024-10-07T01:13:30.738Z] [hub] writing locator at C:\Users\jehuc\AppData\Local\Temp\hub-astromedia-modular.json
+[debug] [2024-10-07T01:13:30.757Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2024-10-07T01:13:30.758Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2024-10-07T01:13:30.758Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\jehuc\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.19.8.jar","--host","192.168.100.66","--port",8080,"--websocket_port",9150,"--project_id","astromedia-modular","--rules","C:\\Users\\jehuc\\modular\\astroreco\\firestore.rules","--single_project_mode",true],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false,"shell":false,"port":8080} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\jehuc\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.19.8.jar\",\"--host\",\"192.168.100.66\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"astromedia-modular\",\"--rules\",\"C:\\\\Users\\\\jehuc\\\\modular\\\\astroreco\\\\firestore.rules\",\"--single_project_mode\",true],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false,\"port\":8080}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[info] +  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2024-10-07T01:13:47.812Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2024-10-07T01:13:47.813Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2024-10-07T01:13:47.813Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\jehuc\\.cache\\firebase\\emulators\\ui-v1.13.0\\server\\server.mjs"],"optionalArgs":[],"joinArgs":false,"shell":false,"port":4000} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\jehuc\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.13.0\\\\server\\\\server.mjs\"],\"optionalArgs\":[],\"joinArgs\":false,\"shell\":false,\"port\":4000}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2024-10-07T01:13:48.001Z] Web / API server started at 127.0.0.1:4001
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4001\n"}}
+[debug] [2024-10-07T01:13:48.002Z] Web / API server started at ::1:4001
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4001\n"}}
+[debug] [2024-10-07T01:13:48.046Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: 
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4001/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬─────────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port           │ View in Emulator UI             │
+├────────────────┼─────────────────────┼─────────────────────────────────┤
+│ Authentication │ 192.168.100.66:9099 │ http://127.0.0.1:4001/auth      │
+├────────────────┼─────────────────────┼─────────────────────────────────┤
+│ Firestore      │ 192.168.100.66:8080 │ http://127.0.0.1:4001/firestore │
+└────────────────┴─────────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500, 9150
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2024-10-07T04:12:06.190Z] Received signal SIGHUP 1

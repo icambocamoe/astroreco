@@ -1,12 +1,11 @@
-
-// Import the Firebase modules
+// Import the required Firebase modules and platform
 import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence, setPersistence, browserLocalPersistence, getAuth, connectAuthEmulator } from 'firebase/auth'; // For authentication
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { ReactNativeAsyncStorage, AsyncStorage } from '@react-native-async-storage/async-storage';
+import { initializeAuth, getReactNativePersistence, getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyD4IhQHYFAmpsHkXpJrd9bHc13mTA3tfAI",
   authDomain: "astromedia-modular.firebaseapp.com",
@@ -16,30 +15,38 @@ const firebaseConfig = {
   appId: "1:128503393727:web:9bc7dc018d9e2287e5c50a"
 };
 
-// Initialize Firebase
+// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
-// Initialize Firebase Authentication and get a reference to the service
 
-
-// Conditionally initialize authentication based on platform
+// Initialize Authentication with persistence for React Native
 let auth;
-if (Platform.OS !== 'web') {
-  // Use react-native-specific persistence
+let user;
+if (Platform.OS === 'web') {
+  auth = getAuth(app);
+  // Set the persistence mode for the auth session
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+      // Now you can sign in a user and the session will be remembered even after a page refresh
+      console.log('Persistence set to local storage');
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      console.error('Error setting persistence:', error);
+    });
+ 
+} else {
   auth = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage)
   });
-} else {
-  // For web, just use standard auth
-  auth = getAuth(app);
+
 }
+
+// Initialize Firestore
 const db = getFirestore(app);
 
-/*
-const machineIP = "192.168.100.66"; // Replace with your machine's actual IP address
+// Uncomment the following lines to use Firebase emulators (for development only)
+// const machineIP = "192.168.100.66"; // Replace with your IP
+// connectFirestoreEmulator(db, machineIP, 8080);
+// connectAuthEmulator(auth, `http://${machineIP}:9099`);
 
-
-//connectFirestoreEmulator(db, machineIP, 8080); // Firestore emulator
-//connectAuthEmulator(auth, `http://${machineIP}:9099`); // Auth emulator
-
-*/
 export { auth, db };
