@@ -30,6 +30,7 @@ export const stylesAppTheme = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 30,
     height: 50,
+    width: "100%",
   },
   buttonText: {
     color: "white",

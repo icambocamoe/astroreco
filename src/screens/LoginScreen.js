@@ -15,6 +15,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig.js"; // Import your firebase configuration
 import { stylesAppTheme } from "../theme/AppTheme.js";
 import { TitleComponent } from "../components/TitleComponent.js";
+import { ButtonComponent } from "../components/ButtonComponent.js";
 
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
@@ -92,12 +93,8 @@ export default function LoginScreen({ navigation }) {
             )}
           />
 
-          <TouchableOpacity
-            style={stylesAppTheme.button}
-            onPress={handleSubmit(onSubmit)}
-          >
-            <Text style={stylesAppTheme.buttonText}>Login</Text>
-          </TouchableOpacity>
+
+          <ButtonComponent title={"login"} action={handleSubmit(onSubmit)} />
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
           <TouchableOpacity
