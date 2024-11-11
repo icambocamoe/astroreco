@@ -14,6 +14,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"; // Import Firebase a
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig.js"; // Import your firebase configuration
 import { stylesAppTheme } from "../theme/AppTheme.js";
+import { TitleComponent } from "../components/TitleComponent.js";
 
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
@@ -46,11 +47,12 @@ export default function LoginScreen({ navigation }) {
     <ScrollView>
       <View style={stylesAppTheme.container}>
         <View style={stylesAppTheme.imagecontainer}>
-          <Text style={stylesAppTheme.imagelabel}>Astromedia</Text>
-          <Image
+          {/* <Text style={stylesAppTheme.imagelabel}>Astromedia</Text> */}
+          <TitleComponent />
+          {/* <Image
             source={require("../../assets/logos astromedia.jpg")}
             style={stylesAppTheme.image}
-          />
+          /> */}
         </View>
 
         <View style={stylesAppTheme.logincontainer}>
@@ -98,8 +100,13 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
-          <TouchableOpacity onPress={() => navigation.navigate("Register")} style={stylesAppTheme.touchableLink}>
-            <Text style={stylesAppTheme.linkText}>Don't have an account? Register</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Register")}
+            style={stylesAppTheme.touchableLink}
+          >
+            <Text style={stylesAppTheme.linkText}>
+              Don't have an account? Register
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -108,10 +115,6 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  
-
-
-  
   /* label: {
     fontSize: 18,
     marginBottom: 8,

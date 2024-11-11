@@ -12,10 +12,10 @@ import OnboardingScreen from './src/screens/OnboardingScreen.js';
 import HoroscopeScreen from './src/screens/HoroscopeScreen.js';
 import RecommendationsScreen from './src/screens/RecommendationsScreen.js';
 import MoviesScreen from './src/screens/MoviesScreen.js';
-import HomeSvg from './svg_components/astrology-horoscope-svgrepo-com.svg';
-import MusicNoteSvg from './svg_components/music-note-svgrepo-com.svg';
-import MovieReelSvg from './svg_components/movie-play-button-2-svgrepo-com.svg';
-import StarSVG from './svg_components/stars-svgrepo-com.svg';
+import HomeSvg from './src/svg_components/astrology-horoscope-svgrepo-com.svg';
+import MusicNoteSvg from './src/svg_components/music-note-svgrepo-com.svg';
+import MovieReelSvg from './src/svg_components/movie-play-button-2-svgrepo-com.svg';
+import StarSVG from './src/svg_components/stars-svgrepo-com.svg';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 // Define the Bottom Tab Navigator for Home Section
@@ -30,7 +30,7 @@ function HomeTabs({ route }) {
         component={HomeScreen}
         initialParams={{ user }} // Pass 'user' to HomeScreen
         options={{
-          tabBarIcon: ({ color, size }) => <HomeSvg fill={color} width={size} height={size} />,
+          tabBarIcon: ({ color, size }) => <HomeSvg fill={color} width={size} height={size}  />,
           headerShown: false
         }}
       />
