@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, Linking, StyleSheet } from 'react-native';
-import { auth, db } from '../firebaseConfig.js'; // Import Firebase auth
+import { auth, db } from '../../firebaseConfig.js'; // Import Firebase auth
 import Sentiment from 'sentiment';
 import axios from 'axios';
 import { updateDoc, getFirestore, collection, query, where, getDocs, doc, getDoc, serverTimestamp } from "firebase/firestore";

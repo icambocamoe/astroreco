@@ -12,7 +12,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth"; // Import Firebase auth
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebaseConfig.js"; // Import your firebase configuration
+import { auth, db } from "../../firebaseConfig.js"; // Import your firebase configuration
 import { stylesAppTheme } from "../theme/AppTheme.js";
 
 export default function LoginScreen({ navigation }) {
@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
         <View style={stylesAppTheme.imagecontainer}>
           <Text style={stylesAppTheme.imagelabel}>Astromedia</Text>
           <Image
-            source={require("../assets/logos astromedia.jpg")}
+            source={require("../../assets/logos astromedia.jpg")}
             style={stylesAppTheme.image}
           />
         </View>

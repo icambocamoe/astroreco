@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Scr
 import { useForm, Controller } from 'react-hook-form';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
 import { getDocs, doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { auth, db } from '../firebaseConfig.js'; // Import your firebase configuration
+import { auth, db } from '../../firebaseConfig.js'; // Import your firebase configuration
 import { stylesAppTheme } from '../theme/AppTheme.js';
 
 
@@ -61,7 +61,7 @@ export default function RegisterScreen({ navigation }) {
       <View style={stylesAppTheme.imagecontainer}>
         <Text style={stylesAppTheme.imagelabel}>Astromedia</Text>
         <Image
-          source={require('../assets/logos astromedia.jpg')}
+          source={require('../../assets/logos astromedia.jpg')}
           style={stylesAppTheme.image}
         />
       </View>

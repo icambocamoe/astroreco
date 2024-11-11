@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../firebaseConfig.js'; // Import your Firebase configuration 
+import { auth, db } from '../../firebaseConfig.js'; // Import your Firebase configuration 
 import { updateDoc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import timezones from '../assets/objects/timezones.js';
+import timezones from '../../assets/objects/timezones.js';
 import RNPickerSelect from 'react-native-picker-select';
-import months from '../assets/objects/months.js';
+import months from '../../assets/objects/months.js';
 import CitySearch from './CitySearchScreen.js';
 
 const OnboardingScreen = ({ navigation, route }) => {

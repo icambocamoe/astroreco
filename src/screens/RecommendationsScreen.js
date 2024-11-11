@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, Linking, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { updateDoc, getFirestore, collection, query, where, getDocs, doc, getDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db } from '../firebaseConfig.js'; // Import Firebase auth
+import { auth, db } from '../../firebaseConfig.js'; // Import Firebase auth
+import ThumbsUpSvg from '../svg_components/hand-in-thumbs-up-position-svgrepo-com.svg';
+import ThumbsDownSvg from '../svg_components/thumb-down-svgrepo-com.svg';
 
-
-export default function MoviesScreen({ route }) {
+export default function RecommendationsScreen({ route }) {
     const { user } = route.params;
-    const [movies, setMovies] = useState({});
-    //https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&title=avoid
+    const [songs, setSongs] = useState({});
+
 
     useEffect(() => {
         const queryUserRefData = async () => {
@@ -26,10 +27,10 @@ export default function MoviesScreen({ route }) {
                     querySnapshot.forEach((doc) => {
                         // Set state with the document data
 
-                        if (doc.data().recommendedMovies) {
+                        if (doc.data().recommendedSongs) {
                             console.log("hay recommendedsongs")
-                            console.log(doc.data().recommendedMovies)
-                            setMovies(doc.data().recommendedMovies)
+                            //console.log(doc.data().recommendedSongs)
+                            setSongs(doc.data().recommendedSongs)
                         } else {
                             console.log("no hay recommendedsongs")
                         }
@@ -55,40 +56,39 @@ export default function MoviesScreen({ route }) {
     const renderItem = (item, index) => {
         return (
             <View key={index} style={styles.card}>
-                <Image source={{ uri: item.img }} style={styles.image} />
-                <Text style={styles.title}>{item.title}</Text>
-                <Text>Type: {item.title_type}</Text>
-                <TouchableOpacity onPress={() => openUrl(`https://www.netflix.com/watch/${item.netflix_id}`)}>
-                    <Text style={styles.link}>Watch in Netflix</Text>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text>Artist: {item.artist?.name}</Text>
+                <Text>Duration: {item.duration} seconds</Text>
+                <View style={styles.row}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: '' }]} onPress={() => alert('Green button pressed!')}>
+                        <ThumbsUpSvg />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: '' }]} onPress={() => alert('Red button pressed!')}>
+                        <ThumbsDownSvg />
+                    </TouchableOpacity>
+                </View>
+                {/* Touchable link to open the URL */}
+                <TouchableOpacity onPress={() => openUrl(item.url)}>
+                    <Text style={styles.link}>Listen on Last.fm</Text>
                 </TouchableOpacity>
-                <Text>Synopsis: {item.synopsis}</Text>
-                <Text>Rating: {item.rating}</Text>
-                <Text>Year: {item.year}</Text>
-                <Text>Runtime: {Math.floor(item.runtime / 60)} minutes</Text>
-                <TouchableOpacity onPress={() => openUrl(`https://www.imdb.com/title/${item.imdb_id}`)}>
-                    <Text style={styles.link}>See in IMDB</Text>
-                </TouchableOpacity>
-                <Text></Text>
-                <Text>Top 250: {item.top250}</Text>
-                <Text>Top 250 TV: {item.top250tv}</Text>
-                <Text>Title Date: {item.title_date}</Text>
+
             </View>
         );
     };
 
     return (
         <ScrollView style={styles.container}>
-        {Object.keys(movies).map((category, catIndex) => (
-            <View key={catIndex}>
-                <Text style={styles.categoryTitle}>{category.toUpperCase()}</Text>
-                {movies[category].results.length > 0 ? (
-                    movies[category].results.map((item, itemIndex) => renderItem(item, itemIndex))
-                ) : (
-                    <Text>No items in this category.</Text>
-                )}
-            </View>
-        ))}
-    </ScrollView>
+            {Object.keys(songs).map((category, index) => (
+                <View key={index}>
+                    <Text style={styles.categoryTitle}>{category.toUpperCase()}</Text>
+                    {songs[category].length > 0 ? (
+                        songs[category].map(renderItem)
+                    ) : (
+                        <Text>No items in this category.</Text>
+                    )}
+                </View>
+            ))}
+        </ScrollView>
     );
 };
 
@@ -135,4 +135,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
