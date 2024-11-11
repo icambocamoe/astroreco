@@ -4,66 +4,17 @@ import { auth } from "./firebaseConfig.js"; // Import your firebase configuratio
 import { onAuthStateChanged } from 'firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import LoginScreen from './src/screens/LoginScreen.js';
-import HomeScreen from './src/screens/HomeScreen.js';
+
 import RegisterScreen from './src/screens/RegisterScreen.js';
 import OnboardingScreen from './src/screens/OnboardingScreen.js';
-import HoroscopeScreen from './src/screens/HoroscopeScreen.js';
-import RecommendationsScreen from './src/screens/RecommendationsScreen.js';
-import MoviesScreen from './src/screens/MoviesScreen.js';
-import HomeSvg from './src/svg_components/astrology-horoscope-svgrepo-com.svg';
-import MusicNoteSvg from './src/svg_components/music-note-svgrepo-com.svg';
-import MovieReelSvg from './src/svg_components/movie-play-button-2-svgrepo-com.svg';
-import StarSVG from './src/svg_components/stars-svgrepo-com.svg';
+import { HomeTabs } from './src/navigator/BottomTabNavigator.js';
+
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+
 // Define the Bottom Tab Navigator for Home Section
-function HomeTabs({ route }) {
-  // Extract the passed 'user' param
-  const { user } = route.params;
-  console.log(user)
-  return (
-    <Tab.Navigator>
-      <Tab.Screen
-        name="BirthChart"
-        component={HomeScreen}
-        initialParams={{ user }} // Pass 'user' to HomeScreen
-        options={{
-          tabBarIcon: ({ color, size }) => <HomeSvg fill={color} width={size} height={size}  />,
-          headerShown: false
-        }}
-      />
-      <Tab.Screen
-        name="Horoscope"
-        component={HoroscopeScreen}
-        initialParams={{ user }} // Pass 'user' to HoroscopeScreen
-        options={{
-          tabBarIcon: ({ color, size }) => <StarSVG fill={color} width={size} height={size} />,
-          headerShown: false
-        }}
-      />
-      <Tab.Screen
-        name="Songs"
-        component={RecommendationsScreen}
-        initialParams={{ user }} // Pass 'user' to RecommendationsScreen
-        options={{
-          tabBarIcon: ({ color, size }) => <MusicNoteSvg fill={color} width={size} height={size} />,
-          headerShown: false
-        }}
-      />
-      <Tab.Screen
-        name="Movies"
-        component={MoviesScreen}
-        initialParams={{ user }} // Pass 'user' to RecommendationsScreen
-        options={{
-          tabBarIcon: ({ color, size }) => <MovieReelSvg fill={color} width={size} height={size} />,
-          headerShown: false
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
+
 
 
 export default function App() {
