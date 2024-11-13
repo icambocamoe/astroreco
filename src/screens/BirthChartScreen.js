@@ -114,6 +114,15 @@ export  function BirthChartScreen({ navigation, route }) {
         <Text style={styles.info}>City: {astrologicalData.city}</Text>
 
     
+        <Button
+        title="Sign Out"
+        onPress={() => {
+          // Call your sign out function or navigate to login
+          navigation.replace('Login');
+        }}
+        color="red"
+      />
+
 
         <Text style={styles.subheader}>Planets</Text>
         <PlanetCard planet={astrologicalData.sun} />

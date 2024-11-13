@@ -16,7 +16,7 @@ export const TitleComponent = () => {
     const dynamicStyles = dynamicStylesAppTheme(themeData);
  
   return (
-    <View /* style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]} */
+    <View  style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]} 
     >
       <View style={styles.logo}>
         {/*            <Text  style={[dynamicStyles.dynamicText, stylesAppTheme.titleScreen]} >{title}</Text> */}

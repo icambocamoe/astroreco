@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Button } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import RNPickerSelect from "react-native-picker-select";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
@@ -290,14 +290,8 @@ export const SettingsScreen = () => {
           stylesAppTheme.mainContainer,
         ]}
       >
-        <View
-          style={[
-            dynamicStyles.dynamicViewContainer,
-            stylesAppTheme.viewContainer,
-          ]}
-        >
-          <TitleComponent title="Settings" />
-        </View>
+        <TitleComponent />
+
         <View
           style={[
             dynamicStyles.dynamicViewContainer,
