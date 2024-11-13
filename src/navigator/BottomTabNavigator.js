@@ -4,10 +4,11 @@ import MoviesScreen from "../screens/MoviesScreen.js";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React from "react";
+import React, { useContext } from "react";
 import { SettingsScreen } from "../screens/SettingsScreen.js";
 import { BirthChartScreen } from "../screens/BirthChartScreen.js";
 import { HomeScreen } from "../screens/HomeScreen.js";
+import { ThemeContext } from "../context/ThemeContext.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +16,15 @@ export function HomeTabs({ route }) {
   // Extract the passed 'user' param
   const { user } = route.params;
   console.log(user);
+
+
+  const context = useContext(ThemeContext); // Obtiene el contexto
+  const themeData = context?.themeData; // Obtiene themeData del contexto
+
+  if (!themeData) {
+    return null; // Puedes manejar la carga o estado por defecto aquí
+  }
+
   return (
     <Tab.Navigator
       initialRouteName="BirthChart"
@@ -40,9 +50,9 @@ export function HomeTabs({ route }) {
           // Retorna el ícono correspondiente de Ionicons
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: /* themeData.texto */ "black", // Cambia el color del ícono cuando la pestaña está activa
+        tabBarActiveTintColor: themeData.texto  /* "black" */, // Cambia el color del ícono cuando la pestaña está activa
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { backgroundColor: /* themeData.fondo */ "white" },
+        tabBarStyle: { backgroundColor: themeData.fondo,  /* "white" */ },
       })}
     >
       {/* <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} /> */}
