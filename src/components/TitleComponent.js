@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
-/* import { stylesAppTheme } from '../Theme/AppTheme'
-import { dynamicStylesAppTheme } from '../Theme/DynamicAppTheme'
-import { ThemeContext } from './ThemeContext' */
+import { View, StyleSheet } from "react-native";
+import { stylesAppTheme } from "../theme/AppTheme";
+import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
+ import { ThemeContext } from '../context/ThemeContext' 
 import LogoAstromedia from "../svg_components/astromedia_logo.svg";
 
-export const TitleComponent = ({ title }) => {
-  /* const context = useContext(ThemeContext); // Obtiene el contexto
+export const TitleComponent = () => {
+   const context = useContext(ThemeContext); // Obtiene el contexto
     const themeData = context?.themeData; // Obtiene themeData del contexto
   
     if (!themeData) {
@@ -14,14 +14,14 @@ export const TitleComponent = ({ title }) => {
     }
     // Genera los estilos dinámicos pasando themeData
     const dynamicStyles = dynamicStylesAppTheme(themeData);
- */
+ 
   return (
     <View /* style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]} */
     >
       <View style={styles.logo}>
         {/*            <Text  style={[dynamicStyles.dynamicText, stylesAppTheme.titleScreen]} >{title}</Text> */}
 
-        <LogoAstromedia  fill="black" />
+        <LogoAstromedia  fill={themeData.texto} />
       </View>
     </View>
   );
