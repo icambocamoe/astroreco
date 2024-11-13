@@ -8,14 +8,14 @@ import { StyleSheet } from "react-native";
 export const stylesAppTheme = StyleSheet.create({
   container: {
     paddingVertical: 10,
-    marginBottom:50,
+    marginBottom: 50,
     flex: 1,
     paddingHorizontal: 16,
     backgroundColor: "#f0f6fc",
   },
   logincontainer: {
     paddingTop: 10,
-   /*  backgroundColor: "red", */
+    /*  backgroundColor: "red", */
   },
   input: {
     borderWidth: 1,
@@ -43,7 +43,7 @@ export const stylesAppTheme = StyleSheet.create({
     justifyContent: "center",
     /* backgroundColor: "red",  */
     marginTop: 20,
-    marginHorizontal:40,
+    marginHorizontal: 40,
     height: "auto",
   },
   linkText: {
@@ -72,6 +72,78 @@ export const stylesAppTheme = StyleSheet.create({
     alignSelf: "center",
     fontSize: 25,
     marginBottom: 20,
-    
+  },
+
+  titleContainer: {
+    paddingVertical: 10,
+  },
+
+  title: {
+    marginHorizontal: 10,
+    fontSize: 40,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  titleScreen: {
+    textAlign: "center",
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+
+  scrollViewStyle: {
+    paddingHorizontal: 10,
+    width: "auto",
+    paddingTop: 30,
+  },
+
+  mainContainer: {
+    width: "auto",
+    height: "auto",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 35,
+  },
+  viewContainer: {
+    borderRadius: 10,
+    width: "100%",
+    marginVertical: 5,
+  },
+
+  textInput: {
+    height: 50,
+    marginHorizontal: 10,
+    marginVertical: 5,
+    fontSize: 20,
+    paddingHorizontal: 20,
+    fontStyle: "italic",
+    borderRadius: 10,
+  },
+
+  /* button: {
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 10,
+    borderRadius: 25,
+    marginHorizontal: 30,
+  }, */
+
+  textButton: {
+    fontSize: 18,
+    letterSpacing: 3,
+    textTransform: "uppercase",
+    fontWeight: "bold",
+  },
+
+  buttonLink: {
+    alignItems: "center",
+    height: 35,
+    justifyContent: "center",
+    marginHorizontal: 30,
+  },
+  textLink: {
+    fontSize: 17,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
   },
 });
