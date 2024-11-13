@@ -2,9 +2,12 @@ import HoroscopeScreen from "../screens/HoroscopeScreen.js";
 import RecommendationsScreen from "../screens/RecommendationsScreen.js";
 import MoviesScreen from "../screens/MoviesScreen.js";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/HomeScreen.js";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
+import { SettingsScreen } from "../screens/SettingsScreen.js";
+import { BirthChartScreen } from "../screens/BirthChartScreen.js";
+import { HomeScreen } from "../screens/HomeScreen.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +17,7 @@ export function HomeTabs({ route }) {
   console.log(user);
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="BirthChart"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -27,6 +30,11 @@ export function HomeTabs({ route }) {
             iconName = focused ? "musical-notes" : "musical-notes-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "Movies") {
             iconName = focused ? "film" : "film-outline"; // Cambia el icono según si está enfocado o no
+          } else if (route.name === "Settings") {
+            iconName = focused ? "settings" : "settings-outline"; // Cambia el icono según si está enfocado o no
+          }
+          else if (route.name === "HomeScreen") {
+            iconName = focused ? "home" : "home-outline"; // Cambia el icono según si está enfocado o no
           }
 
           // Retorna el ícono correspondiente de Ionicons
@@ -38,9 +46,16 @@ export function HomeTabs({ route }) {
       })}
     >
       {/* <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} /> */}
+      
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        initialParams={{ user }}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen
         name="BirthChart"
-        component={HomeScreen}
+        component={BirthChartScreen}
         initialParams={{ user }}
         options={{ headerShown: false }}
       />
@@ -63,6 +78,14 @@ export function HomeTabs({ route }) {
       <Tab.Screen
         name="Movies"
         component={MoviesScreen}
+        initialParams={{ user }} // Pass 'user' to RecommendationsScreen
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
         initialParams={{ user }} // Pass 'user' to RecommendationsScreen
         options={{
           headerShown: false,
