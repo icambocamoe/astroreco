@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import { signOut } from "firebase/auth"; // Import Firebase signOut method
+import { stylesAppTheme } from "../theme/AppTheme";
 import {
   getFirestore,
   collection,
@@ -18,8 +19,11 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
+import { ThemeContext } from "../context/ThemeContext";
+import { TitleComponent } from "../components/TitleComponent.js";
 
-export  function BirthChartScreen({ navigation, route }) {
+export function BirthChartScreen({ navigation, route }) {
   const { user } = route.params;
   console.log("home", user);
   // Initialize state to store the documents
@@ -75,7 +79,7 @@ export  function BirthChartScreen({ navigation, route }) {
   };
   const PlanetCard = ({ planet }) => {
     return (
-      <View style={styles.card}>
+      <View style={[styles.card]}>
         <Text style={styles.emoji}>{planet?.emoji}</Text>
         <Text style={styles.planetName}>{planet?.name}</Text>
         <Text>{`Sign: ${planet?.sign}`}</Text>
@@ -84,70 +88,92 @@ export  function BirthChartScreen({ navigation, route }) {
       </View>
     );
   };
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.welcome}>Welcome to Astromedia!</Text>
 
-      <View>
+  const context = useContext(ThemeContext); // Obtiene el contexto
+  const themeData = context?.themeData; // Obtiene themeData del contexto
+
+  if (!themeData) {
+    return null; // Puedes manejar la carga o estado por defecto aquí
+  }
+  // Genera los estilos dinámicos pasando themeData
+  const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+  return (
+    <ScrollView
+      style={[
+        dynamicStyles.dynamicScrollViewStyle,
+        stylesAppTheme.scrollViewStyle,
+      ]}
+    >
+      <View
+        style={[
+          /* dynamicStyles.dynamicMainContainer,
+          stylesAppTheme.mainContainer, */
+          dynamicStyles.dynamicViewContainer,
+          stylesAppTheme.viewContainer,
+        ]}
+      >
+        <TitleComponent />
+        {/* <View>
         <Image
           source={require("../../assets/logos astromedia.jpg")} // Replace with your own image
           style={styles.image}
         />
+      </View> */}
+        {/* <View style={stylesAppTheme.viewContainer}> */}
+          <Text style={styles.text}>
+            Get personalized media recommendations based on your astrological
+            profile and horoscope.
+          </Text>
+          <View>
+            <Text style={styles.header}>
+              Astrology Data for {astrologicalData.name}
+            </Text>
+            <Text style={styles.subheader}>Birth Info</Text>
+            <Text style={styles.info}>
+              Date: {astrologicalData.year}-{astrologicalData.month}-
+              {astrologicalData.day}
+            </Text>
+            <Text style={styles.info}>
+              Time: {astrologicalData.hour}:{astrologicalData.minute}
+            </Text>
+            <Text style={styles.info}>City: {astrologicalData.city}</Text>
+
+            <Button
+              title="Sign Out"
+              onPress={() => {
+                // Call your sign out function or navigate to login
+                navigation.replace("Login");
+              }}
+              color="red"
+            />
+
+            <Text style={[styles.subheader, {fontSize: 24}]}>Planets</Text>
+            <PlanetCard planet={astrologicalData.sun} />
+            <PlanetCard planet={astrologicalData.moon} />
+            <PlanetCard planet={astrologicalData.mercury} />
+            <PlanetCard planet={astrologicalData.venus} />
+            <PlanetCard planet={astrologicalData.mars} />
+            <PlanetCard planet={astrologicalData.jupiter} />
+            <PlanetCard planet={astrologicalData.saturn} />
+            <PlanetCard planet={astrologicalData.uranus} />
+            <PlanetCard planet={astrologicalData.neptune} />
+            <PlanetCard planet={astrologicalData.pluto} />
+
+            {/* Add more PlanetCard components for other planets */}
+          </View>
+
+          {/* You can keep the sign out button here */}
+          <Button
+            title="Sign Out"
+            onPress={() => {
+              // Call your sign out function or navigate to login
+              navigation.replace("Login");
+            }}
+            color="red"
+          />
+       {/*  </View> */}
       </View>
-
-      <Text style={styles.text}>
-        Get personalized media recommendations based on your astrological
-        profile and horoscope.
-      </Text>
-      <View>
-        <Text style={styles.header}>
-          Astrology Data for {astrologicalData.name}
-        </Text>
-        <Text style={styles.subheader}>Birth Info</Text>
-        <Text style={styles.info}>
-          Date: {astrologicalData.year}-{astrologicalData.month}-
-          {astrologicalData.day}
-        </Text>
-        <Text style={styles.info}>
-          Time: {astrologicalData.hour}:{astrologicalData.minute}
-        </Text>
-        <Text style={styles.info}>City: {astrologicalData.city}</Text>
-
-    
-        <Button
-        title="Sign Out"
-        onPress={() => {
-          // Call your sign out function or navigate to login
-          navigation.replace('Login');
-        }}
-        color="red"
-      />
-
-
-        <Text style={styles.subheader}>Planets</Text>
-        <PlanetCard planet={astrologicalData.sun} />
-        <PlanetCard planet={astrologicalData.moon} />
-        <PlanetCard planet={astrologicalData.mercury} />
-        <PlanetCard planet={astrologicalData.venus} />
-        <PlanetCard planet={astrologicalData.mars} />
-        <PlanetCard planet={astrologicalData.jupiter} />
-        <PlanetCard planet={astrologicalData.saturn} />
-        <PlanetCard planet={astrologicalData.uranus} />
-        <PlanetCard planet={astrologicalData.neptune} />
-        <PlanetCard planet={astrologicalData.pluto} />
-
-        {/* Add more PlanetCard components for other planets */}
-      </View>
-
-      {/* You can keep the sign out button here */}
-      <Button
-        title="Sign Out"
-        onPress={() => {
-          // Call your sign out function or navigate to login
-          navigation.replace("Login");
-        }}
-        color="red"
-      />
     </ScrollView>
   );
 }

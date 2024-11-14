@@ -16,7 +16,7 @@ export const TitleComponent = () => {
     const dynamicStyles = dynamicStylesAppTheme(themeData);
  
   return (
-    <View  style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]} 
+    <View  /* style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]} */ 
     >
       <View style={styles.logo}>
         {/*            <Text  style={[dynamicStyles.dynamicText, stylesAppTheme.titleScreen]} >{title}</Text> */}
@@ -30,6 +30,7 @@ export const TitleComponent = () => {
 export const styles = StyleSheet.create({
   logo: {
     alignItems: "center",
+    marginBottom: 20,
    /*  backgroundColor: "red", */
     /* height: 300, */
   },

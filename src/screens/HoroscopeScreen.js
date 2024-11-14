@@ -311,8 +311,8 @@ export default function HoroscopeScreen({ route }) {
           ]}
         >
           <Text style={styles.title}>Horoscope</Text>
-          <Text style={styles.date}>{horoscope.date}</Text>
-          <Text style={styles.horoscope}>{horoscope.horoscope}</Text>
+          <Text style={[styles.date, dynamicStyles.dynamicText, styles.text]}>{horoscope.date}</Text>
+          <Text style={[styles.horoscope, dynamicStyles.dynamicText, styles.text]}>{horoscope.horoscope}</Text>
         </View>
       </View>
     </ScrollView>
@@ -337,4 +337,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 10,
   },
+  text:{
+    fontSize: 18,
+    //textAlign: "justify",
+  },
+  date: {
+  fontWeight: "bold",
+  }
 });

@@ -107,6 +107,7 @@ export const stylesAppTheme = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     marginVertical: 5,
+    padding: 20,
   },
 
   textInput: {
