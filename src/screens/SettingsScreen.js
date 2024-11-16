@@ -5,14 +5,26 @@ import RNPickerSelect from "react-native-picker-select";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
+import { signOut } from "firebase/auth"; // Import Firebase signOut method
+import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 
-export const SettingsScreen = () => {
+export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState("claro00"); // Estado para el tema seleccionado en el picker
 
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth); // Firebase sign out
+      // After signing out, navigate back to the Login screen
+      navigation.replace("Login");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   if (!themeData || !setThemeData) {
     return null;
@@ -353,6 +365,15 @@ export const SettingsScreen = () => {
                 color: themeData.texto, // Color del placeholder
               },
             }}
+          />
+
+          <Button
+            title="Sign Out"
+            onPress={() => {
+              // Call your sign out function or navigate to login
+              navigation.replace("Login");
+            }}
+            color="red"
           />
         </View>
       </View>

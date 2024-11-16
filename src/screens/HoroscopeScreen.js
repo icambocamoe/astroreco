@@ -310,7 +310,7 @@ export default function HoroscopeScreen({ route }) {
             stylesAppTheme.viewContainer,
           ]}
         >
-          <Text style={styles.title}>Horoscope</Text>
+          <Text style={[styles.title, dynamicStyles.dynamicText]}>Horoscope</Text>
           <Text style={[styles.date, dynamicStyles.dynamicText, styles.text]}>{horoscope.date}</Text>
           <Text style={[styles.horoscope, dynamicStyles.dynamicText, styles.text]}>{horoscope.horoscope}</Text>
         </View>
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     marginBottom: 20,
   },

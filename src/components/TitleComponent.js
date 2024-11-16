@@ -30,7 +30,7 @@ export const TitleComponent = () => {
 export const styles = StyleSheet.create({
   logo: {
     alignItems: "center",
-    marginBottom: 20,
+    marginVertical: 20,
    /*  backgroundColor: "red", */
     /* height: 300, */
   },

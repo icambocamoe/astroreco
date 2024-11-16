@@ -68,7 +68,7 @@ export function BirthChartScreen({ navigation, route }) {
 */
 
   // Function to handle sign out
-  const handleSignOut = async () => {
+  /* const handleSignOut = async () => {
     try {
       await signOut(auth); // Firebase sign out
       // After signing out, navigate back to the Login screen
@@ -76,7 +76,7 @@ export function BirthChartScreen({ navigation, route }) {
     } catch (error) {
       console.error("Error signing out: ", error);
     }
-  };
+  }; */
   const PlanetCard = ({ planet }) => {
     return (
       <View style={[styles.card]}>
@@ -109,8 +109,8 @@ export function BirthChartScreen({ navigation, route }) {
         style={[
           /* dynamicStyles.dynamicMainContainer,
           stylesAppTheme.mainContainer, */
-          dynamicStyles.dynamicViewContainer,
-          stylesAppTheme.viewContainer,
+          dynamicStyles.dynamicMainContainer,
+          stylesAppTheme.mainContainer,
         ]}
       >
         <TitleComponent />
@@ -121,34 +121,26 @@ export function BirthChartScreen({ navigation, route }) {
         />
       </View> */}
         {/* <View style={stylesAppTheme.viewContainer}> */}
-          <Text style={styles.text}>
+        <View style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]}>
+          <Text style={[styles.text, dynamicStyles.dynamicText]}>
             Get personalized media recommendations based on your astrological
             profile and horoscope.
           </Text>
           <View>
-            <Text style={styles.header}>
+            <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
               Astrology Data for {astrologicalData.name}
             </Text>
-            <Text style={styles.subheader}>Birth Info</Text>
-            <Text style={styles.info}>
+            <Text style={[styles.subheader, dynamicStyles.dynamicText]}>Birth Info</Text>
+            <Text style={[styles.info, dynamicStyles.dynamicText]}>
               Date: {astrologicalData.year}-{astrologicalData.month}-
               {astrologicalData.day}
             </Text>
-            <Text style={styles.info}>
+            <Text style={[styles.info, dynamicStyles.dynamicText]}>
               Time: {astrologicalData.hour}:{astrologicalData.minute}
             </Text>
-            <Text style={styles.info}>City: {astrologicalData.city}</Text>
+            <Text style={[styles.info, dynamicStyles.dynamicText]}>City: {astrologicalData.city}</Text>
 
-            <Button
-              title="Sign Out"
-              onPress={() => {
-                // Call your sign out function or navigate to login
-                navigation.replace("Login");
-              }}
-              color="red"
-            />
-
-            <Text style={[styles.subheader, {fontSize: 24}]}>Planets</Text>
+            <Text style={[styles.subheader, dynamicStyles.dynamicText, { fontSize: 24 }]}>Planets</Text>
             <PlanetCard planet={astrologicalData.sun} />
             <PlanetCard planet={astrologicalData.moon} />
             <PlanetCard planet={astrologicalData.mercury} />
@@ -162,17 +154,7 @@ export function BirthChartScreen({ navigation, route }) {
 
             {/* Add more PlanetCard components for other planets */}
           </View>
-
-          {/* You can keep the sign out button here */}
-          <Button
-            title="Sign Out"
-            onPress={() => {
-              // Call your sign out function or navigate to login
-              navigation.replace("Login");
-            }}
-            color="red"
-          />
-       {/*  </View> */}
+        </View>
       </View>
     </ScrollView>
   );

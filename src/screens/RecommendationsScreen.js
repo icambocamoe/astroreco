@@ -127,25 +127,35 @@ export default function RecommendationsScreen({ route }) {
         stylesAppTheme.scrollViewStyle,
       ]}
     >
-      <TitleComponent />
       <View
         style={[
           /* dynamicStyles.dynamicMainContainer,
           stylesAppTheme.mainContainer, */
-          dynamicStyles.dynamicViewContainer,
-          stylesAppTheme.viewContainer,
+          dynamicStyles.dynamicMainContainer,
+          stylesAppTheme.mainContainer,
         ]}
       >
-        {Object.keys(songs).map((category, index) => (
-          <View key={index}>
-            <Text style={styles.categoryTitle}>{category.toUpperCase()}</Text>
-            {songs[category].length > 0 ? (
-              songs[category].map(renderItem)
-            ) : (
-              <Text>No items in this category.</Text>
-            )}
-          </View>
-        ))}
+        <TitleComponent />
+
+        <View
+          style={[
+            stylesAppTheme.viewContainer,
+            dynamicStyles.dynamicViewContainer,
+          ]}
+        >
+          {Object.keys(songs).map((category, index) => (
+            <View key={index}>
+              <Text style={[styles.categoryTitle, dynamicStyles.dynamicText]}>
+                {category.toUpperCase()}
+              </Text>
+              {songs[category].length > 0 ? (
+                songs[category].map(renderItem)
+              ) : (
+                <Text>No items in this category.</Text>
+              )}
+            </View>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );

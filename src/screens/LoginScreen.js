@@ -57,9 +57,9 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <ScrollView
-      style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle]}
+      style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle, {paddingTop: 90}]}
     >
-      <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer, {paddingTop: 90}]}>
+      <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
         {/* <View style={stylesAppTheme.imagecontainer}> */}
           {/* <Text style={stylesAppTheme.imagelabel}>Astromedia</Text> */}
           <TitleComponent />
@@ -72,7 +72,7 @@ export default function LoginScreen({ navigation }) {
           style={[stylesAppTheme.viewContainer, dynamicStyles.dynamicViewContainer]}
         >
           <View style={stylesAppTheme.logincontainer}>
-            <Text style={stylesAppTheme.screensName}>Show it's yourself!</Text>
+            <Text style={[stylesAppTheme.screensName, dynamicStyles.dynamicText]}>Show it's yourself!</Text>
             {/* <Text style={styles.label}>Email</Text> */}
             <Controller
               control={control}
@@ -115,7 +115,7 @@ export default function LoginScreen({ navigation }) {
               onPress={() => navigation.navigate("Register")}
               style={stylesAppTheme.touchableLink}
             >
-              <Text style={stylesAppTheme.linkText}>
+              <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText]}>
                 Don't have an account? Register
               </Text>
             </TouchableOpacity>
