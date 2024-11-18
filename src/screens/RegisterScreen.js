@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth
 import { getDocs, doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from '../../firebaseConfig.js'; // Import your firebase configuration
 import { stylesAppTheme } from '../theme/AppTheme.js';
-
+import { dynamicStylesAppTheme } from '../theme/DynamicAppTheme.js';
+import { ThemeContext } from '../context/ThemeContext.js';
+import { TitleComponent } from '../components/TitleComponent.js';
+import { ButtonComponent } from '../components/ButtonComponent.js';
 
 export default function RegisterScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const context = useContext(ThemeContext); // Obtiene el contexto
+  const themeData = context?.themeData; // Obtiene themeData del contexto
+
+  if (!themeData) {
+    return null; // Puedes manejar la carga o estado por defecto aquí
+  }
+  // Genera los estilos dinámicos pasando themeData
+  const dynamicStyles = dynamicStylesAppTheme(themeData);
   
   const onSubmit = async (data) => {
     try {
@@ -56,17 +68,11 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <ScrollView>
-    <View style={stylesAppTheme.container}>
-      <View style={stylesAppTheme.imagecontainer}>
-        <Text style={stylesAppTheme.imagelabel}>Astromedia</Text>
-        <Image
-          source={require('../../assets/logos astromedia.jpg')}
-          style={stylesAppTheme.image}
-        />
-      </View>
+    <ScrollView style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle]}>
+    <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
+      <TitleComponent />
       <View style={stylesAppTheme.logincontainer}>
-        <Text style={stylesAppTheme.screensName}>Register to get your cosmic content!</Text>
+        <Text style={[stylesAppTheme.screensName, dynamicStyles.dynamicText]}>Register to get your cosmic content!</Text>
 
         {/* <Text style={styles.label}>Name</Text> */}
         <Controller
@@ -121,18 +127,19 @@ export default function RegisterScreen({ navigation }) {
         />
 
         {/* <Button title="Register" onPress={handleSubmit(onSubmit)} /> */}
+        <ButtonComponent title={"register"} action={handleSubmit(onSubmit)} />
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
             style={stylesAppTheme.button}
             onPress={handleSubmit(onSubmit)}
           >
             <Text style={stylesAppTheme.buttonText}>register</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {success ? <Text style={styles.success}>{success}</Text> : null}
         <TouchableOpacity onPress={() => navigation.navigate('Login')} style={stylesAppTheme.touchableLink}>
-          <Text style={stylesAppTheme.linkText}>
+          <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText]}>
             Already have an account? Login
           </Text>
         </TouchableOpacity>
