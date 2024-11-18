@@ -10,6 +10,7 @@ import { BirthChartScreen } from "../screens/BirthChartScreen.js";
 import { HomeScreen } from "../screens/HomeScreen.js";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { MaterialTopTabNavigator } from "./MaterialTopTabNavigator.js";
+import { FavoriteMaterialTopTabNavigator } from "./FavoriteMaterialTopTabNavigator.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ export function HomeTabs({ route }) {
           if (route.name === "BirthChart") {
             iconName = focused ? "map" : "map-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "Horoscope") {
-            iconName = focused ? "star" : "star-outline"; // Cambia el icono según si está enfocado o no
+            iconName = focused ? "sparkles" : "sparkles-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "Songs") {
             iconName = focused ? "musical-notes" : "musical-notes-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "Movies") {
@@ -44,8 +45,11 @@ export function HomeTabs({ route }) {
             iconName = focused ? "settings" : "settings-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "HomeScreen") {
             iconName = focused ? "home" : "home-outline"; // Cambia el icono según si está enfocado o no
-          } else if (route.name === "Material") {
+          } else if (route.name === "Recs") {
             iconName = focused ? "library" : "library-outline"; // Cambia el icono según si está enfocado o no
+          }
+           else if (route.name === "Favorites") {
+            iconName = focused ? "heart" : "heart-outline"; // Cambia el icono según si está enfocado o no
           }
 
           // Retorna el ícono correspondiente de Ionicons
@@ -95,7 +99,15 @@ export function HomeTabs({ route }) {
         }}
       /> */}
       <Tab.Screen
-        name="Material"
+        name="Favorites"
+        component={FavoriteMaterialTopTabNavigator}
+        initialParams={{ user }} // Pass 'user' to RecommendationsScreen
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Recs"
         component={MaterialTopTabNavigator}
         initialParams={{ user }} // Pass 'user' to RecommendationsScreen
         options={{

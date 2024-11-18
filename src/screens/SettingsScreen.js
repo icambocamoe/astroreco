@@ -7,6 +7,7 @@ import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import { signOut } from "firebase/auth"; // Import Firebase signOut method
 import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
+import {ButtonComponent} from "../components/ButtonComponent.js"
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
@@ -367,14 +368,18 @@ export const SettingsScreen = ({ navigation, route }) => {
             }}
           />
 
-          <Button
+          {/* <Button
             title="Sign Out"
             onPress={() => {
               // Call your sign out function or navigate to login
               navigation.replace("Login");
             }}
             color="red"
-          />
+          /> */}
+          <ButtonComponent title={"Sign out"} action={() => {navigation.replace("Login")}}/>
+
+
+
         </View>
       </View>
     </ScrollView>
