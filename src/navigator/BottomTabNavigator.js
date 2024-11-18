@@ -44,6 +44,8 @@ export function HomeTabs({ route }) {
             iconName = focused ? "settings" : "settings-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "HomeScreen") {
             iconName = focused ? "home" : "home-outline"; // Cambia el icono según si está enfocado o no
+          } else if (route.name === "Material") {
+            iconName = focused ? "library" : "library-outline"; // Cambia el icono según si está enfocado o no
           }
 
           // Retorna el ícono correspondiente de Ionicons
@@ -76,7 +78,7 @@ export function HomeTabs({ route }) {
           headerShown: false,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Songs"
         component={RecommendationsScreen}
         initialParams={{ user }} // Pass 'user' to RecommendationsScreen
@@ -91,7 +93,7 @@ export function HomeTabs({ route }) {
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Material"
         component={MaterialTopTabNavigator}
