@@ -28,7 +28,7 @@ export function HomeTabs({ route }) {
 
   return (
     <Tab.Navigator
-      initialRouteName="BirthChart"
+      initialRouteName="HomeScreen"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;

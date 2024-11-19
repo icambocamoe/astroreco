@@ -9,6 +9,7 @@ import { signOut } from "firebase/auth"; // Import Firebase signOut method
 import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { ColorPaletteTheme } from "../theme/ColorPaletteTheme.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
@@ -36,10 +37,20 @@ export const SettingsScreen = ({ navigation, route }) => {
     const newTheme = ColorPaletteTheme(themeName); // Obtén el tema basado en el nombre
     setThemeData(newTheme); // Actualiza el contexto con el nuevo tema
     setSelectedTheme(themeName); // Actualiza el picker
+    saveTheme(newTheme);
   };
 
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+  const saveTheme = async (theme) => {
+    try {
+      await AsyncStorage.setItem("themeColors", JSON.stringify(theme));
+      console.log("Theme saved!");
+    } catch (error) {
+      console.error("Error saving theme:", error);
+    }
+  };
 
   return (
     <ScrollView
