@@ -10,14 +10,20 @@ import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { ColorPaletteTheme } from "../theme/ColorPaletteTheme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LanguajeContext } from "../context/LanguageContext.js";
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState("claro00"); // Estado para el tema seleccionado en el picker
+  const [selectedLanguage, setSelectedLanguage] = useState("english"); // Estado para el tema seleccionado en el picker
 
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
+
+  const contextLang = useContext(LanguajeContext); // Obtiene el contexto
+  const languageData = contextLang?.languajeData;
+  const setLanguageData = contextLang?.setLanguajeData;
 
   const handleSignOut = async () => {
     try {
@@ -60,6 +66,16 @@ export const SettingsScreen = ({ navigation, route }) => {
       console.error('Error signing out: ', error);
     }
   };
+
+  const saveLanguage = async (language) => {
+    try {
+      await AsyncStorage.setItem("appLanguage", language); // Guarda como string simple
+      console.log("Language saved!");
+    } catch (error) {
+      console.error("Error saving language:", error);
+    }
+  };
+
   return (
     <ScrollView
       style={[
@@ -122,6 +138,38 @@ export const SettingsScreen = ({ navigation, route }) => {
                 label: "Dark Cenizas de Ruinas Ancestrales",
                 value: "oscuro10",
               }, // Tema: Cenizas de la Ruina
+            ]}
+            style={{
+              inputAndroid: {
+                color: themeData.texto,
+                padding: 10,
+                fontSize: 20,
+              },
+              placeholder: {
+                color: themeData.texto, // Color del placeholder
+              },
+            }}
+          />
+
+          <RNPickerSelect
+            placeholder={{
+              label: "Selecciona un idioma...",
+              value: null, // Esto asegura que no se seleccione ninguna opción inicialmente
+              color: themeData.texto,
+            }}
+            onValueChange={(value) => {
+              if (value) {
+                setSelectedLanguage(value);
+                saveLanguage(value);
+              }
+            }}
+            value={selectedLanguage} // El valor actual del picker
+            items={[
+              //{ label: "Light Clásico", value: "claro00" },
+              { label: "Spanish", value: "spanish" },
+              { label: "English", value: "english" },
+              { label: "Japanese", value: "japanese" },
+              { label: "Chinese", value: "chinese" },
             ]}
             style={{
               inputAndroid: {
