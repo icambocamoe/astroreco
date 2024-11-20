@@ -125,7 +125,7 @@ export default function MoviesScreen({ route }) {
           dynamicStyles.dynamicMainContainer,
         ]}
       >
-        <TitleComponent />
+       {/*  <TitleComponent /> */}
         <View
           style={[
             stylesAppTheme.viewContainer,

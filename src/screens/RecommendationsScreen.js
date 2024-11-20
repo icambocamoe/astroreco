@@ -135,7 +135,7 @@ export default function RecommendationsScreen({ route }) {
           stylesAppTheme.mainContainer,
         ]}
       >
-        <TitleComponent />
+        {/* <TitleComponent /> */}
 
         <View
           style={[

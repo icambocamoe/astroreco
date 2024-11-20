@@ -11,7 +11,7 @@
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
     "@firebasegen/default": "file:generated/javascript/default",
-    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^21.5.0",
     "@react-native-picker/picker": "^2.8.1",
