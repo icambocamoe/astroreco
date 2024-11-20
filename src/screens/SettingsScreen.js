@@ -51,7 +51,15 @@ export const SettingsScreen = ({ navigation, route }) => {
       console.error("Error saving theme:", error);
     }
   };
-
+  const handleLogout = async () => {
+    try {
+      await auth().signOut();
+      console.log('User signed out!');
+      // Redirect the user or update your UI as needed
+    } catch (error) {
+      console.error('Error signing out: ', error);
+    }
+  };
   return (
     <ScrollView
       style={[
@@ -137,9 +145,7 @@ export const SettingsScreen = ({ navigation, route }) => {
           /> */}
           <ButtonComponent
             title={"Sign out"}
-            action={() => {
-              navigation.replace("Login");
-            }}
+            action={handleSignOut}
           />
         </View>
       </View>

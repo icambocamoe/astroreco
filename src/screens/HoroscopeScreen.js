@@ -67,41 +67,110 @@ export default function HoroscopeScreen({ route }) {
   }
 
   const analyzeSentiment = async () => {
-    if (horoscope && Object.keys(horoscope).length > 0) {
-      console.log(horoscope);
-      const result = sentiment.analyze(horoscope.horoscope);
-      setSentimentResult(result);
-      console.log(result);
 
-      // Create a dictionary to hold words and their corresponding songs
-      const songsDictionary = {};
-      const moviesDictionary = {};
-      // Fetch songs for each word and populate the dictionary
-      await Promise.all(
-        result.words.map(async (word) => {
-          const songsData = await fetchTracksByTheme(word);
-          songsDictionary[word] = songsData; // Assign the songs to the word in the dictionary
-        })
-      );
-      await Promise.all(
-        result.words.map(async (word) => {
-          const moviesData = await getMovies(word);
-          moviesDictionary[word] = moviesData;
-        })
-      );
+    try {
+      if (horoscope && Object.keys(horoscope).length > 0) {
+        console.log(docRef);
 
-      // Update state with the songs dictionary
-      setSongs(songsDictionary);
-      setMovies(moviesDictionary);
-      console.log("canciones ", songsDictionary);
-      await updateDoc(docRef, {
-        recommendedSongs: songsDictionary,
-        recommendedMovies: moviesDictionary,
-        updatedAt: serverTimestamp(), // Update the timestamp as well
-      });
+        // Analyze the sentiment
+        const result = sentiment.analyze(horoscope.horoscope);
+        setSentimentResult(result);
+        console.log(result);
+
+        // Create dictionaries for songs and movies
+        const songsDictionary = {};
+        const moviesDictionary = {};
+
+        try {
+          // Reference to the userRefData collection
+          const userRefCollection = collection(db, "userRefData");
+
+          // Create a query to filter by userIDRef
+          const q = query(userRefCollection, where("userIDRef", "==", user));
+
+          try {
+            // Execute the query
+            const querySnapshot = await getDocs(q);
+            // Iterate through the results
+            querySnapshot.forEach(async (doc)  => {
+              // Set state with the document data
+
+              if (doc.data().recommendedMovies) {
+                console.log("hay recommended movies");
+                console.log(doc.data().recommendedMovies);
+                setMovies(doc.data().recommendedMovies);
+              } else {
+                console.log("no hay recommended movies");
+                // Fetch movies and populate the dictionary
+                await Promise.all(
+                  result.words.map(async (word) => {
+                    try {
+                      const moviesData = await getMovies(word);
+                      moviesDictionary[word] = moviesData;
+                    } catch (err) {
+                      console.error(`Failed to fetch movies for word "${word}":`, err);
+                    }
+                  })
+                );
+                setMovies(moviesDictionary);
+                console.log("Movies Dictionary:", moviesDictionary);
+                try {
+                  // Update the Firestore document
+                  await updateDoc(docRef, {
+                    recommendedMovies: moviesDictionary,
+                    updatedAt: serverTimestamp(), // Update the timestamp as well
+                  });
+                } catch (error) {
+                  console.error("Error in firebase:", error);
+                }
+              }
+              if (doc.data().recommendedSongs) {
+                console.log("hay recommendedsongs");
+                //console.log(doc.data().recommendedSongs)
+                setSongs(doc.data().recommendedSongs);
+              } else {
+                console.log("no hay recommendedsongs");
+                // Fetch songs and populate the dictionary
+                await Promise.all(
+                  result.words.map(async (word) => {
+                    try {
+                      const songsData = await fetchTracksByTheme(word);
+                      songsDictionary[word] = songsData;
+                    } catch (err) {
+                      console.error(`Failed to fetch songs for word "${word}":`, err);
+                    }
+                  })
+                );
+                // Update state with the dictionaries
+                setSongs(songsDictionary);
+                console.log("Songs Dictionary:", songsDictionary);
+                try {
+                  // Update the Firestore document
+                  await updateDoc(docRef, {
+                    recommendedSongs: songsDictionary,
+                    updatedAt: serverTimestamp(), // Update the timestamp as well
+                  });
+                } catch (error) {
+                  console.error("Error in firebase:", error);
+                }
+              
+              }
+            });
+
+          } catch (error) {
+            console.error("Error fetching user reference data: ", error);
+          }
+        } catch (err) {
+          console.error("Error fetching document: ", err);
+        }
+        
+      }
+    } catch (error) {
+      console.error("Error in analyzeSentiment function:", error);
     }
   };
 
+  // Extract themes and movies on component mount
   const getMovies = async (theme) => {
     const options = {
       method: "GET",
@@ -124,7 +193,7 @@ export default function HoroscopeScreen({ route }) {
       console.error(error);
     }
   };
-  // Extract themes on component mount
+
   const getHoroscope = async (options, formattedDate) => {
     try {
       //console.log(options.sunsign)
@@ -175,6 +244,8 @@ export default function HoroscopeScreen({ route }) {
           const querySnapshot = await getDocs(q);
           // Iterate through the results
           querySnapshot.forEach((doc) => {
+
+            setDocRef(doc.ref);
             setSunSign(getZodiacName(doc.data().apiInfo.data.sun.sign));
             // Get current date
             const currentDate = new Date();
@@ -207,13 +278,11 @@ export default function HoroscopeScreen({ route }) {
                 setSongsFlag(true);
               } else {
                 console.log("no hay recommendedsongs");
-                analyzeSentiment();
               }
             } else {
               console.log("we need to fetch today's horoscope");
             }
 
-            setDocRef(doc.ref);
           });
         } catch (error) {
           console.error("Error fetching user reference data: ", error);
@@ -271,22 +340,21 @@ export default function HoroscopeScreen({ route }) {
       console.error("Error fetching document: ", error);
     }
   };
+
   useEffect(() => {
-    if (songsFlag) {
-      console.log("ya están las canciones");
-      return; // Early return to avoid the else
+    if (horoscope) {
+      analyzeSentiment();
     }
-    analyzeSentiment();
-  }, [horoscope, songsFlag]);
+  }, [horoscope]);
 
   const context = useContext(ThemeContext); // Obtiene el contexto
-    const themeData = context?.themeData; // Obtiene themeData del contexto
-  
-    if (!themeData) {
-      return null; // Puedes manejar la carga o estado por defecto aquí
-    }
-    // Genera los estilos dinámicos pasando themeData
-    const dynamicStyles = dynamicStylesAppTheme(themeData);
+  const themeData = context?.themeData; // Obtiene themeData del contexto
+
+  if (!themeData) {
+    return null; // Puedes manejar la carga o estado por defecto aquí
+  }
+  // Genera los estilos dinámicos pasando themeData
+  const dynamicStyles = dynamicStylesAppTheme(themeData);
 
 
   return (
@@ -337,11 +405,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 10,
   },
-  text:{
+  text: {
     fontSize: 18,
     //textAlign: "justify",
   },
   date: {
-  fontWeight: "bold",
+    fontWeight: "bold",
   }
 });

@@ -30,42 +30,46 @@ import { TitleComponent } from "../components/TitleComponent.js";
 export default function MoviesScreen({ route }) {
   const { user } = route.params;
   const [movies, setMovies] = useState({});
+
   //https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&title=avoid
+  const queryUserRefData = async () => {
+    try {
+      // Reference to the userRefData collection
+      const userRefCollection = collection(db, "userRefData");
+
+      // Create a query to filter by userIDRef
+      const q = query(userRefCollection, where("userIDRef", "==", user));
+
+      try {
+        // Execute the query
+        const querySnapshot = await getDocs(q);
+        // Iterate through the results
+        querySnapshot.forEach((doc) => {
+          // Set state with the document data
+
+          if (doc.data().recommendedMovies) {
+            console.log("hay recommended movies");
+            console.log(doc.data().recommendedMovies);
+            setMovies(doc.data().recommendedMovies);
+          } else {
+            console.log("no hay recommended movies");
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching user reference data: ", error);
+      }
+    } catch (err) {
+      console.error("Error fetching document: ", err);
+    }
+  };
 
   useEffect(() => {
-    const queryUserRefData = async () => {
-      try {
-        // Reference to the userRefData collection
-        const userRefCollection = collection(db, "userRefData");
 
-        // Create a query to filter by userIDRef
-        const q = query(userRefCollection, where("userIDRef", "==", user));
-
-        try {
-          // Execute the query
-          const querySnapshot = await getDocs(q);
-          // Iterate through the results
-          querySnapshot.forEach((doc) => {
-            // Set state with the document data
-
-            if (doc.data().recommendedMovies) {
-              console.log("hay recommendedsongs");
-              console.log(doc.data().recommendedMovies);
-              setMovies(doc.data().recommendedMovies);
-            } else {
-              console.log("no hay recommendedsongs");
-            }
-          });
-        } catch (error) {
-          console.error("Error fetching user reference data: ", error);
-        }
-      } catch (err) {
-        console.error("Error fetching document: ", err);
-      }
-    };
-    // Calling the function when the screen is loaded
     queryUserRefData();
+
   }, []);
+
+
   const openUrl = (url) => {
     Linking.openURL(url).catch((err) =>
       console.error("Couldn't load page", err)
@@ -125,27 +129,31 @@ export default function MoviesScreen({ route }) {
           dynamicStyles.dynamicMainContainer,
         ]}
       >
-       {/*  <TitleComponent /> */}
+        {/*  <TitleComponent /> */}
         <View
           style={[
             stylesAppTheme.viewContainer,
             dynamicStyles.dynamicViewContainer,
           ]}
         >
-          {Object.keys(movies).map((category, catIndex) => (
-            <View key={catIndex}>
-              <Text style={[styles.categoryTitle, dynamicStyles.dynamicText]}>
-                {category.toUpperCase()}
-              </Text>
-              {movies[category].results.length > 0 ? (
-                movies[category].results.map((item, itemIndex) =>
-                  renderItem(item, itemIndex)
-                )
-              ) : (
-                <Text>No items in this category.</Text>
-              )}
-            </View>
-          ))}
+          {Object.keys(movies || {}).length > 0 ? (
+            Object.keys(movies).map((category, catIndex) => (
+              <View key={catIndex}>
+                <Text style={[styles.categoryTitle, dynamicStyles.dynamicText]}>
+                  {category.toUpperCase()}
+                </Text>
+                {Array.isArray(movies[category]?.results) && movies[category].results.length > 0 ? (
+                  movies[category].results.map((item, itemIndex) =>
+                    renderItem(item, itemIndex)
+                  )
+                ) : (
+                  <Text>No items in this category.</Text>
+                )}
+              </View>
+            ))
+          ) : (
+            <Text>No data available.</Text>
+          )}
         </View>
       </View>
     </ScrollView>
