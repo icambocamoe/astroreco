@@ -12,16 +12,22 @@ import { StackNavigator } from "./src/navigator/StackNavigator.js";
 import { StatusBar } from "expo-status-bar";
 import { ThemeContext, ThemeProvider } from "./src/context/ThemeContext.js";
 import { UserContext, UserProvider } from "./src/context/UserContext.js";
+import {
+  LanguageContext,
+  LanguageProvider,
+} from "./src/context/LanguageContext.js";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <UserProvider>
-        <ThemeProvider>
-          <StatusBar style="dark" />
-          <AppContent />
-        </ThemeProvider>
-      </UserProvider>
+      <LanguageProvider>
+        <UserProvider>
+          <ThemeProvider>
+            <StatusBar style="dark" />
+            <AppContent />
+          </ThemeProvider>
+        </UserProvider>
+      </LanguageProvider>
     </NavigationContainer>
   );
 }
