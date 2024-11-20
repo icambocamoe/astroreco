@@ -46,7 +46,7 @@ export function BirthChartScreen({ navigation, route }) {
           console.log(querySnapshot.docs);
           // Iterate through the results
           querySnapshot.forEach((doc) => {
-            console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo);
+            //console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo);
             // Set state with the document data
             setAstrologicalData(doc.data().apiInfo.data);
           });
@@ -85,10 +85,21 @@ export function BirthChartScreen({ navigation, route }) {
         <Text>{`Sign: ${planet?.sign}`}</Text>
         <Text>{`Element: ${planet?.element}`}</Text>
         <Text>{`House: ${planet?.house?.replace(/_/g, " ")}`}</Text>
+        <Text>{`Quality: ${planet?.quality?.replace(/_/g, " ")}`}</Text>
       </View>
     );
   };
-
+  const HouseCard = ({ planet }) => {
+    return (
+      <View style={[styles.card]}>
+        <Text style={styles.emoji}>{planet?.emoji}</Text>
+        <Text style={styles.planetName}>{planet?.name}</Text>
+        <Text>{`Sign: ${planet?.sign}`}</Text>
+        <Text>{`Element: ${planet?.element}`}</Text>
+        <Text>{`Quality: ${planet?.quality?.replace(/_/g, " ")}`}</Text>
+      </View>
+    );
+  };
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
 
@@ -122,13 +133,9 @@ export function BirthChartScreen({ navigation, route }) {
       </View> */}
         {/* <View style={stylesAppTheme.viewContainer}> */}
         <View style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]}>
-          <Text style={[styles.text, dynamicStyles.dynamicText]}>
-            Get personalized media recommendations based on your astrological
-            profile and horoscope.
-          </Text>
           <View>
             <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
-              Astrology Data for {astrologicalData.name}
+              Birth Chart {astrologicalData.name}
             </Text>
             <Text style={[styles.subheader, dynamicStyles.dynamicText]}>Birth Info</Text>
             <Text style={[styles.info, dynamicStyles.dynamicText]}>
@@ -151,6 +158,19 @@ export function BirthChartScreen({ navigation, route }) {
             <PlanetCard planet={astrologicalData.uranus} />
             <PlanetCard planet={astrologicalData.neptune} />
             <PlanetCard planet={astrologicalData.pluto} />
+            <Text style={[styles.subheader, dynamicStyles.dynamicText, { fontSize: 24 }]}>Houses</Text>
+            <HouseCard planet={astrologicalData.first_house}/>
+            <HouseCard planet={astrologicalData.second_house}/>
+            <HouseCard planet={astrologicalData.third_house}/>
+            <HouseCard planet={astrologicalData.fourth_house}/>
+            <HouseCard planet={astrologicalData.fifth_house}/>
+            <HouseCard planet={astrologicalData.sixth_house}/>
+            <HouseCard planet={astrologicalData.seventh_house}/>
+            <HouseCard planet={astrologicalData.eighth_house}/>
+            <HouseCard planet={astrologicalData.ninth_house}/>
+            <HouseCard planet={astrologicalData.tenth_house}/>
+            <HouseCard planet={astrologicalData.eleventh_house}/>
+            <HouseCard planet={astrologicalData.twelfth_house}/>
 
             {/* Add more PlanetCard components for other planets */}
           </View>
