@@ -18,6 +18,9 @@ import { TitleComponent } from "../components/TitleComponent.js";
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme.js";
 import { ThemeContext } from "../context/ThemeContext.js";
+import { LanguajeContext } from "../context/LanguageContext.js";
+import Languages from "../lang/Languages.json";
+
 
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
@@ -52,6 +55,17 @@ export default function LoginScreen({ navigation }) {
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
   }
+
+  const contextLang = useContext(LanguajeContext);
+  const languageData = contextLang?.languageData;
+  const currentLanguage = languageData?.language || "spanish";
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
+  };
+
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
 
@@ -85,7 +99,7 @@ export default function LoginScreen({ navigation }) {
                   value={value}
                   autoCapitalize="none"
                   keyboardType="email-address"
-                  placeholder="Email"
+                  placeholder={t("login.email_input")}
                   placeholderTextColor="#888" // (Opcional) Color del placeholder
                 />
               )}
@@ -102,21 +116,21 @@ export default function LoginScreen({ navigation }) {
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry
-                  placeholder="Password"
+                  placeholder={t("login.password_input")}
                   placeholderTextColor="#888"
                 />
               )}
             />
 
-            <ButtonComponent title={"login"} action={handleSubmit(onSubmit)} />
+            <ButtonComponent title={t("login.button_text")} action={handleSubmit(onSubmit)} />
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <TouchableOpacity
               onPress={() => navigation.navigate("Register")}
               style={stylesAppTheme.touchableLink}
             >
-              <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText]}>
-                Don't have an account? Register
+              <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText, {/* backgroundColor: "red", */ width: 260, textAlign: "center"}]}>
+              {t("login.text_link")}
               </Text>
             </TouchableOpacity>
           </View>

@@ -9,6 +9,9 @@ import { dynamicStylesAppTheme } from '../theme/DynamicAppTheme.js';
 import { ThemeContext } from '../context/ThemeContext.js';
 import { TitleComponent } from '../components/TitleComponent.js';
 import { ButtonComponent } from '../components/ButtonComponent.js';
+import { LanguajeContext } from '../context/LanguageContext.js';
+import Languages from "../lang/Languages.json";
+
 
 export default function RegisterScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
@@ -67,12 +70,25 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
+  const contextLang = useContext(LanguajeContext);
+  const languageData = contextLang?.languageData;
+  const currentLanguage = languageData?.language || "spanish";
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
+  };
+
   return (
     <ScrollView style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle]}>
     <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
       <TitleComponent />
+      <View
+          style={[stylesAppTheme.viewContainer, dynamicStyles.dynamicViewContainer]}
+        >
       <View style={stylesAppTheme.logincontainer}>
-        <Text style={[stylesAppTheme.screensName, dynamicStyles.dynamicText]}>Register to get your cosmic content!</Text>
+        <Text style={[stylesAppTheme.screensName, dynamicStyles.dynamicText]}>{t("register.title")}</Text>
 
         {/* <Text style={styles.label}>Name</Text> */}
         <Controller
@@ -85,7 +101,7 @@ export default function RegisterScreen({ navigation }) {
               onChangeText={onChange}
               value={value}
               autoCapitalize="words"
-              placeholder="Name" 
+              placeholder={t("register.name_input")} 
               placeholderTextColor="#888" 
             />
           )}
@@ -103,7 +119,7 @@ export default function RegisterScreen({ navigation }) {
               value={value}
               autoCapitalize="none"
               keyboardType="email-address"
-              placeholder="Email" 
+              placeholder={t("register.email_input")} 
               placeholderTextColor="#888" 
             />
           )}
@@ -120,14 +136,14 @@ export default function RegisterScreen({ navigation }) {
               onChangeText={onChange}
               value={value}
               secureTextEntry
-              placeholder="Password" 
+              placeholder={t("register.password_input")} 
               placeholderTextColor="#888" 
             />
           )}
         />
 
         {/* <Button title="Register" onPress={handleSubmit(onSubmit)} /> */}
-        <ButtonComponent title={"register"} action={handleSubmit(onSubmit)} />
+        <ButtonComponent title={t("register.button_text")} action={handleSubmit(onSubmit)} />
 
         {/* <TouchableOpacity
             style={stylesAppTheme.button}
@@ -139,10 +155,11 @@ export default function RegisterScreen({ navigation }) {
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {success ? <Text style={styles.success}>{success}</Text> : null}
         <TouchableOpacity onPress={() => navigation.navigate('Login')} style={stylesAppTheme.touchableLink}>
-          <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText]}>
-            Already have an account? Login
+          <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText, {/* backgroundColor: "red", */ width: 250, textAlign: 'center'}]}>
+          {t("register.text_link")}
           </Text>
         </TouchableOpacity>
+      </View>
       </View>
     </View>
     </ScrollView>
@@ -157,7 +174,8 @@ const styles = StyleSheet.create({
     fontStyle: 'bold',
     alignSelf: 'center',
     fontSize: 24,
-    paddingTop: 20
+    paddingTop: 20,
+    alignContent: 'center',
   },
 
  /*  label: {

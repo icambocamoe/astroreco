@@ -26,7 +26,8 @@ import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { TitleComponent } from "../components/TitleComponent.js";
 import { ThemeContext } from "../context/ThemeContext.js";
-
+import { LanguajeContext } from "../context/LanguageContext.js";
+import Languages from "../lang/Languages.json";
 
 export default function HoroscopeScreen({ route }) {
   const { user } = route.params;
@@ -54,6 +55,16 @@ export default function HoroscopeScreen({ route }) {
     Sap: "capricorn",
     Aqu: "aquarius",
     Pis: "pisces",
+  };
+
+  const contextLang = useContext(LanguajeContext);
+  const languageData = contextLang?.languageData;
+  const currentLanguage = languageData?.language || "spanish";
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
   };
 
   // Function to get the zodiac name by key
@@ -280,14 +291,13 @@ export default function HoroscopeScreen({ route }) {
   }, [horoscope, songsFlag]);
 
   const context = useContext(ThemeContext); // Obtiene el contexto
-    const themeData = context?.themeData; // Obtiene themeData del contexto
-  
-    if (!themeData) {
-      return null; // Puedes manejar la carga o estado por defecto aquí
-    }
-    // Genera los estilos dinámicos pasando themeData
-    const dynamicStyles = dynamicStylesAppTheme(themeData);
+  const themeData = context?.themeData; // Obtiene themeData del contexto
 
+  if (!themeData) {
+    return null; // Puedes manejar la carga o estado por defecto aquí
+  }
+  // Genera los estilos dinámicos pasando themeData
+  const dynamicStyles = dynamicStylesAppTheme(themeData);
 
   return (
     <ScrollView
@@ -310,9 +320,17 @@ export default function HoroscopeScreen({ route }) {
             stylesAppTheme.viewContainer,
           ]}
         >
-          <Text style={[styles.title, dynamicStyles.dynamicText]}>Horoscope</Text>
-          <Text style={[styles.date, dynamicStyles.dynamicText, styles.text]}>{horoscope.date}</Text>
-          <Text style={[styles.horoscope, dynamicStyles.dynamicText, styles.text]}>{horoscope.horoscope}</Text>
+          <Text style={[styles.title, dynamicStyles.dynamicText]}>
+            {t("horoscope.title")}
+          </Text>
+          <Text style={[styles.date, dynamicStyles.dynamicText, styles.text]}>
+            {horoscope.date}
+          </Text>
+          <Text
+            style={[styles.horoscope, dynamicStyles.dynamicText, styles.text]}
+          >
+            {horoscope.horoscope}
+          </Text>
         </View>
       </View>
     </ScrollView>
@@ -337,11 +355,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 10,
   },
-  text:{
+  text: {
     fontSize: 18,
     //textAlign: "justify",
   },
   date: {
-  fontWeight: "bold",
-  }
+    fontWeight: "bold",
+  },
 });

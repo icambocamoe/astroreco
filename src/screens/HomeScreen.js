@@ -6,6 +6,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LanguajeContext } from "../context/LanguageContext";
+import Languages from "../lang/Languages.json";
 
 export const HomeScreen = () => {
   const context = useContext(ThemeContext); // Obtiene el contexto
@@ -21,6 +22,15 @@ export const HomeScreen = () => {
   }
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+  /* const { languageData } = useContext(LanguajeContext); */
+  const currentLanguage = languageData?.language || "spanish";
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
+  };
 
   /*   const loadTheme = async () => {
     try {
@@ -100,6 +110,11 @@ export const HomeScreen = () => {
           ]}
         >
           <Text style={[dynamicStyles.dynamicText]}>Home Screen</Text>
+          <Text style={[dynamicStyles.dynamicText]}>{t("home.title")}</Text>
+          <Text style={[dynamicStyles.dynamicText]}>
+            {" "}
+            {t("home.welcome_message")}
+          </Text>
         </View>
       </View>
     </ScrollView>

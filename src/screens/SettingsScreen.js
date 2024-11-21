@@ -11,6 +11,7 @@ import { ButtonComponent } from "../components/ButtonComponent.js";
 import { ColorPaletteTheme } from "../theme/ColorPaletteTheme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LanguajeContext } from "../context/LanguageContext.js";
+import Languages from "../lang/Languages.json";
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
@@ -24,6 +25,14 @@ export const SettingsScreen = ({ navigation, route }) => {
   const contextLang = useContext(LanguajeContext); // Obtiene el contexto
   const languageData = contextLang?.languajeData;
   const setLanguageData = contextLang?.setLanguajeData;
+
+  const currentLanguage = languageData?.language || "spanish";
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
+  };
 
   const handleSignOut = async () => {
     try {
@@ -88,8 +97,12 @@ export const SettingsScreen = ({ navigation, route }) => {
             stylesAppTheme.viewContainer,
           ]}
         >
-          <Text style={dynamicStyles.dynamicText}>Settings Screen</Text>
-          <Text style={dynamicStyles.dynamicText}>Tema de la aplicacion: </Text>
+          <Text style={dynamicStyles.dynamicText}>
+            {t("settings.language_label")}aa
+          </Text>
+          <Text style={dynamicStyles.dynamicText}>
+            {t("settings.theme_label")}{" "}
+          </Text>
 
           <RNPickerSelect
             placeholder={{
@@ -183,7 +196,7 @@ export const SettingsScreen = ({ navigation, route }) => {
             color="red"
           /> */}
           <ButtonComponent
-            title={"Sign out"}
+            title={t("settings.button_sign_out")}
             action={() => {
               navigation.replace("Login");
             }}
