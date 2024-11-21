@@ -52,6 +52,10 @@ export function MaterialTopTabNavigator({ route }) {
       tabBarActiveTintColor:  themeData.texto  /* "black" */, // Cambia el color del ícono cuando la pestaña está activa
       tabBarInactiveTintColor: "gray",
       tabBarStyle: { backgroundColor:  themeData.fondo  /* "white" */ },
+      tabBarIndicatorStyle: {
+        backgroundColor: themeData.texto, // Cambia el color de la línea debajo del icono
+        height: 1, // Ajusta el grosor del indicador si es necesario
+      },
     })}
     
     >

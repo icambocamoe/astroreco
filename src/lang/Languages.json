@@ -1,6 +1,7 @@
 {
   "spanish": {
     "login": {
+      "title": "¡Míralo tú mismo!",
       "button_text": "Iniciar sesion",
       "text_link" : "¿No tienes una cuenta? Registrate",
       "email_input": "Correo electrónico",
@@ -40,6 +41,7 @@
   },
   "english": {
     "login": {
+      "title": "Show it's yourself!",
       "button_text": "Login",
       "text_link" : "Don't have an account? Resgister",
       "email_input": "Email",

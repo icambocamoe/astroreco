@@ -28,6 +28,7 @@ import { TitleComponent } from "../components/TitleComponent.js";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { LanguajeContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
+import { LoadingIndicator } from "../components/LoadingIndicator.js";
 
 export default function HoroscopeScreen({ route }) {
   const { user } = route.params;
@@ -60,6 +61,11 @@ export default function HoroscopeScreen({ route }) {
   const contextLang = useContext(LanguajeContext);
   const languageData = contextLang?.languageData;
   const currentLanguage = languageData?.language || "spanish";
+
+  const [loading, setLoading] = useState(false);
+
+  if (loading)
+    return <LoadingIndicator />
 
   const t = (keyPath) => {
     return keyPath

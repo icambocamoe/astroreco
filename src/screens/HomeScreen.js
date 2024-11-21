@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
@@ -7,6 +7,7 @@ import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LanguajeContext } from "../context/LanguageContext";
 import Languages from "../lang/Languages.json";
+import { LoadingIndicator } from "../components/LoadingIndicator";
 
 export const HomeScreen = () => {
   const context = useContext(ThemeContext); // Obtiene el contexto
@@ -16,6 +17,11 @@ export const HomeScreen = () => {
   const contextLang = useContext(LanguajeContext);
   const languageData = contextLang?.languageData;
   const setLanguageData = contextLang?.setLanguageData;
+
+  const [loading, setLoading] = useState(false);
+
+  if (loading)
+    return <LoadingIndicator />
 
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí

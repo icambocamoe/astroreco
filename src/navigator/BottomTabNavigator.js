@@ -47,8 +47,7 @@ export function HomeTabs({ route }) {
             iconName = focused ? "home" : "home-outline"; // Cambia el icono según si está enfocado o no
           } else if (route.name === "Recs") {
             iconName = focused ? "library" : "library-outline"; // Cambia el icono según si está enfocado o no
-          }
-           else if (route.name === "Favorites") {
+          } else if (route.name === "Favorites") {
             iconName = focused ? "heart" : "heart-outline"; // Cambia el icono según si está enfocado o no
           }
 
@@ -58,6 +57,10 @@ export function HomeTabs({ route }) {
         tabBarActiveTintColor: themeData.texto /* "black" */, // Cambia el color del ícono cuando la pestaña está activa
         tabBarInactiveTintColor: "gray",
         tabBarStyle: { backgroundColor: themeData.fondo /* "white" */ },
+        tabBarIconStyle: {
+          marginTop: 5, // Mueve los iconos hacia abajo
+        },
+        tabBarShowLabel: false, // Oculta los nombres de las pestañas
       })}
     >
       {/* <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} /> */}

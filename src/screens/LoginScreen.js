@@ -21,7 +21,6 @@ import { ThemeContext } from "../context/ThemeContext.js";
 import { LanguajeContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 
-
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
   const [error, setError] = useState("");
@@ -71,29 +70,50 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <ScrollView
-      style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle, {paddingTop: 90}]}
+      style={[
+        stylesAppTheme.scrollViewStyle,
+        dynamicStyles.dynamicScrollViewStyle,
+        { paddingTop: 90 },
+      ]}
     >
-      <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
+      <View
+        style={[
+          stylesAppTheme.mainContainer,
+          dynamicStyles.dynamicMainContainer,
+        ]}
+      >
         {/* <View style={stylesAppTheme.imagecontainer}> */}
-          {/* <Text style={stylesAppTheme.imagelabel}>Astromedia</Text> */}
-          <TitleComponent />
-          {/* <Image
+        {/* <Text style={stylesAppTheme.imagelabel}>Astromedia</Text> */}
+        <TitleComponent />
+        {/* <Image
             source={require("../../assets/logos astromedia.jpg")}
             style={stylesAppTheme.image}
           /> */}
         {/* </View> */}
         <View
-          style={[stylesAppTheme.viewContainer, dynamicStyles.dynamicViewContainer]}
+          style={[
+            stylesAppTheme.viewContainer,
+            dynamicStyles.dynamicViewContainer,
+          ]}
         >
           <View style={stylesAppTheme.logincontainer}>
-            <Text style={[stylesAppTheme.screensName, dynamicStyles.dynamicText]}>Show it's yourself!</Text>
+            <Text
+              style={[stylesAppTheme.screensName, dynamicStyles.dynamicText]}
+            >
+              {t("login.title")}
+            </Text>
             {/* <Text style={styles.label}>Email</Text> */}
             <Controller
               control={control}
               name="useremail"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  style={stylesAppTheme.input}
+                  style={[
+                    stylesAppTheme.input,
+                    /* dynamicStyles.dynamicViewContainer, */ {
+                      borderColor: themeData.texto,
+                    },
+                  ]}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -111,7 +131,12 @@ export default function LoginScreen({ navigation }) {
               name="password"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  style={stylesAppTheme.input}
+                  style={[
+                    stylesAppTheme.input,
+                    /* dynamicStyles.dynamicViewContainer, */ {
+                      borderColor: themeData.texto,
+                    },
+                  ]}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -122,15 +147,27 @@ export default function LoginScreen({ navigation }) {
               )}
             />
 
-            <ButtonComponent title={t("login.button_text")} action={handleSubmit(onSubmit)} />
+            <ButtonComponent
+              title={t("login.button_text")}
+              action={handleSubmit(onSubmit)}
+            />
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <TouchableOpacity
               onPress={() => navigation.navigate("Register")}
               style={stylesAppTheme.touchableLink}
             >
-              <Text style={[stylesAppTheme.linkText, dynamicStyles.dynamicText, {/* backgroundColor: "red", */ width: 260, textAlign: "center"}]}>
-              {t("login.text_link")}
+              <Text
+                style={[
+                  stylesAppTheme.linkText,
+                  dynamicStyles.dynamicText,
+                  {
+                    /* backgroundColor: "red", */ width: 260,
+                    textAlign: "center",
+                  },
+                ]}
+              >
+                {t("login.text_link")}
               </Text>
             </TouchableOpacity>
           </View>
