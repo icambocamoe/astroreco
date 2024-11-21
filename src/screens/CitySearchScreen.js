@@ -30,8 +30,11 @@ const CitySearch = ({ onCitySelected }) => {
       const cityResults = response.data.results.map(result => ({
         name: result.formatted,
         lat: result.geometry.lat,
-        lng: result.geometry.lng
+        lng: result.geometry.lng,
+        timezone: result.annotations.timezone.name,
+        nation: result.annotations.timezone.short_name
       }));
+      console.log(cityResults);
       setCities(cityResults);  // Set the cities from the API response
     } catch (error) {
       console.error("Error fetching city data:", error);

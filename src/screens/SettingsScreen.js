@@ -66,6 +66,15 @@ export const SettingsScreen = ({ navigation, route }) => {
       console.error("Error saving theme:", error);
     }
   };
+  const handleLogout = async () => {
+    try {
+      await auth().signOut();
+      console.log('User signed out!');
+      // Redirect the user or update your UI as needed
+    } catch (error) {
+      console.error('Error signing out: ', error);
+    }
+  };
 
   const saveLanguage = async (language) => {
     try {
@@ -196,10 +205,8 @@ export const SettingsScreen = ({ navigation, route }) => {
             color="red"
           /> */}
           <ButtonComponent
-            title={t("settings.button_sign_out")}
-            action={() => {
-              navigation.replace("Login");
-            }}
+            title={t("settings.button_sign_out")}     
+            action={handleSignOut}
           />
         </View>
       </View>
