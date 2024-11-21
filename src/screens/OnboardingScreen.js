@@ -74,12 +74,6 @@ const OnboardingScreen = ({ navigation, route }) => {
         value: i < 10 ? '0' + i : i.toString(),
     }));
 
-    const timezoneOptions = timezones.map((timezone) => ({
-        label: `${timezone.timeZoneAbbreviation} - ${timezone.tzIdentifier} (UTC${timezone.utcOffset})`,
-        value: timezone.tzIdentifier,
-        nation: timezone.countryCode // Assuming you have a nation field in your timezone data
-
-    }));
 
     const isLeapYear = (year) => {
         return (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
@@ -102,6 +96,8 @@ const OnboardingScreen = ({ navigation, route }) => {
         setValue('city', city.name);  // Update input with city name
         setValue('latitude', city.lat);   // Store latitude
         setValue('longitude', city.lng);  // Store longitude
+        setValue('timezone', city.timezone);  // Store longitude
+        setValue('nation', city.nation);  // Store longitude
 
        // console.log(`City: ${city.name}, Latitude: ${city.lat}, Longitude: ${city.lng}`);
     };
@@ -271,30 +267,7 @@ const OnboardingScreen = ({ navigation, route }) => {
                 </View>
 
                 <CitySearch onCitySelected={handleCitySelection} />
-
-                <Text style={styles.label}>Select a Timezone:</Text>
-                <Controller
-                    control={control}
-                    name="timezone"
-                    render={({ field: { onChange, value } }) => (
-                        <RNPickerSelect
-                            value={value}
-                            onValueChange={(selectedTimezone) => {
-                                onChange(selectedTimezone);
-                                const selectedTimezoneObject = timezoneOptions.find(
-                                    (option) => option.value === selectedTimezone
-                                );
-                                if (selectedTimezoneObject) {
-                                    setValue('nation', selectedTimezoneObject.nation || '');
-                                }
-                            }}
-                            items={timezoneOptions}
-                            style={pickerSelectStyles}
-                            placeholder={{ label: 'Select a timezone...', value: null }}
-                        />
-                    )}
-                />
-
+            
                 <View style={styles.buttonContainer}>
                     <Button title="Finish Onboarding" onPress={handleSubmit(onSubmit)} />
                 </View>

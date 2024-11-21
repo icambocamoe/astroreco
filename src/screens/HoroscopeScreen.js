@@ -97,7 +97,7 @@ export default function HoroscopeScreen({ route }) {
 
               if (doc.data().recommendedMovies) {
                 console.log("hay recommended movies");
-                console.log(doc.data().recommendedMovies);
+                //console.log(doc.data().recommendedMovies);
                 setMovies(doc.data().recommendedMovies);
               } else {
                 console.log("no hay recommended movies");
