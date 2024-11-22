@@ -13,14 +13,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 import { Alert } from "react-native";
+import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState("claro00"); // Estado para el tema seleccionado en el picker
   const [selectedLanguage, setSelectedLanguage] = useState("english"); // Estado para el tema seleccionado en el picker
-
-  const context = useContext(ThemeContext); // Obtiene el contexto
+  const { docRef } = useContext(HoroscopeContext);
+  const context = useContext(ThemeContext); // Obtiene el contexto 
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
 
@@ -36,8 +37,8 @@ export const SettingsScreen = ({ navigation, route }) => {
       .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
   };
 
-  const handleEditAccount = async () =>{
-    
+  const handleEditAccount = async () => {
+
   }
   const handleSignOut = async () => {
     try {
@@ -271,16 +272,16 @@ export const SettingsScreen = ({ navigation, route }) => {
             color="red"
           /> */}
           <ButtonComponent
-            title={t("settings.button_sign_out")}     
+            title={t("settings.button_sign_out")}
             action={handleSignOut}
           />
           <ButtonComponent
             title={"Delete account"}
             action={handleDeleteAccount}
           />
-           <ButtonComponent
+          <ButtonComponent
             title={"Editar datos"}
-            action={() => navigation.navigate('Horoscope')}
+            action={() => navigation.navigate('Onboarding', {docRef})}
           />
         </View>
       </View>
