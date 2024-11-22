@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, ScrollView, TouchableOpacity, FlatList, StyleSheet, Image, } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, FlatList, StyleSheet, Image, Linking } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
@@ -15,6 +15,11 @@ export const FavoriteMoviesScreen = () => {
   }
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
+  const openUrl = (url) => {
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err)
+    );
+  };
   // Helper function to render individual entries
   const renderItem = (movie, index) => {
     const isFavorite = favoriteMovies.some((favorite) => favorite.imdb_id === movie.item.imdb_id); // Check if movie.item is in favorites

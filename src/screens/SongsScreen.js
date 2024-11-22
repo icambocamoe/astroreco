@@ -33,11 +33,34 @@ import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
 export default function SongsScreen({ route, onFavorite }) {
   const { user } = route.params;
-  const { songs, favoriteSongs, setFavoriteSongs } =
-    useContext(HoroscopeContext);
+
+  //const { songs, favoriteSongs, setFavoriteSongs } =
+   // useContext(HoroscopeContext);
+
+  const { docRef, songs, favoriteSongs, setFavoriteSongs } = useContext(HoroscopeContext);
+
 
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
+
+
+
+  useEffect( () => {
+    const updateDatabase = async () => {
+        try {
+          await updateDoc(docRef, {
+            favoriteSongs: favoriteSongs, // Correcting the key to `favoriteSongs`
+            updatedAt: serverTimestamp(), // Update the timestamp as well
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
+      if (favoriteSongs) {
+        updateDatabase();
+      }
+  }, [favoriteSongs]);
 
   const handleFavoritePress = (item) => {
     setFavoriteSongs((prevFavorites) => {

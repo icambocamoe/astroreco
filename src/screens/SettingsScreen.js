@@ -50,6 +50,9 @@ export const SettingsScreen = ({ navigation, route }) => {
       .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
   };
 
+  const handleEditAccount = async () =>{
+    
+  }
   const handleSignOut = async () => {
     try {
       await signOut(auth); // Firebase sign out
@@ -290,6 +293,7 @@ export const SettingsScreen = ({ navigation, route }) => {
             //action={handleDeleteAccount}
             action={() => setIsModalVisible(true)} // Mostrar el modal
           />
+
           {/* Modal */}
           <Modal
             animationType="slide"
@@ -324,6 +328,12 @@ export const SettingsScreen = ({ navigation, route }) => {
               </View>
             </View>
           </Modal>
+
+           <ButtonComponent
+            title={"Editar datos"}
+            action={handleEditAccount}
+          />
+
         </View>
       </View>
     </ScrollView>
