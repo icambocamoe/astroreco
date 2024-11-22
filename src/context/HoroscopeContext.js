@@ -16,7 +16,8 @@ const HoroscopeProvider = ({ children }) => {
   const [favoriteSongs, setFavoriteSongs] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [favoriteBooks, setFavoriteBooks] = useState([]);
-
+  const [astrologicalData, setAstrologicalData] = useState({});
+  
   return (
     <HoroscopeContext.Provider
       value={{
@@ -43,7 +44,9 @@ const HoroscopeProvider = ({ children }) => {
         favoriteMovies, 
         setFavoriteMovies,
         favoriteBooks, 
-        setFavoriteBooks
+        setFavoriteBooks,
+        astrologicalData, 
+        setAstrologicalData
       }}
     >
       {children}
