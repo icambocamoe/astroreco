@@ -79,7 +79,7 @@ export default function HoroscopeScreen({ route }) {
             {horoscope.date}
           </Text>
           <Text
-            style={[styles.horoscope, dynamicStyles.dynamicText, styles.text]}
+            style={[styles.horoscope, dynamicStyles.dynamicText, styles.text, {textAlign: "justify"}]}
           >
             {horoscope.horoscope}
           </Text>

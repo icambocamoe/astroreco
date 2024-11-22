@@ -1,11 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, ScrollView, Button } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Button,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import RNPickerSelect from "react-native-picker-select";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
-import { deleteUser, signOut, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth"; // Import Firebase signOut method
+import {
+  deleteUser,
+  signOut,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth"; // Import Firebase signOut method
 import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { ColorPaletteTheme } from "../theme/ColorPaletteTheme.js";
@@ -24,6 +37,8 @@ export const SettingsScreen = ({ navigation, route }) => {
   const context = useContext(ThemeContext); // Obtiene el contexto 
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const contextLang = useContext(LanguageContext); // Obtiene el contexto
   const languageData = contextLang?.languageData;
@@ -85,7 +100,7 @@ export const SettingsScreen = ({ navigation, route }) => {
         Alert.alert("Error", "An error occurred while deleting your account.");
       }
     }
-  }
+  };
   if (!themeData || !setThemeData) {
     return null;
   }
@@ -111,10 +126,10 @@ export const SettingsScreen = ({ navigation, route }) => {
   const handleLogout = async () => {
     try {
       await auth().signOut();
-      console.log('User signed out!');
+      console.log("User signed out!");
       // Redirect the user or update your UI as needed
     } catch (error) {
-      console.error('Error signing out: ', error);
+      console.error("Error signing out: ", error);
     }
   };
 
@@ -173,10 +188,7 @@ export const SettingsScreen = ({ navigation, route }) => {
             stylesAppTheme.viewContainer,
           ]}
         >
-          <Text style={dynamicStyles.dynamicText}>
-            {t("settings.language_label")}aa
-          </Text>
-          <Text style={dynamicStyles.dynamicText}>
+          <Text style={[dynamicStyles.dynamicText, styles.textScreen]}>
             {t("settings.theme_label")}{" "}
           </Text>
 
@@ -230,7 +242,9 @@ export const SettingsScreen = ({ navigation, route }) => {
               },
             }}
           />
-
+          <Text style={[dynamicStyles.dynamicText, styles.textScreen]}>
+            {t("settings.language_label")}
+          </Text>
           <RNPickerSelect
             placeholder={{
               label: "Selecciona un idioma...",
@@ -273,18 +287,107 @@ export const SettingsScreen = ({ navigation, route }) => {
           /> */}
           <ButtonComponent
             title={t("settings.button_sign_out")}
+            title={t("settings.button_sign_out")}
             action={handleSignOut}
           />
+          <Text></Text>
           <ButtonComponent
             title={"Delete account"}
+            //action={handleDeleteAccount}
+            action={() => setIsModalVisible(true)} // Mostrar el modal
+          />
+
+          {/* Modal */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isModalVisible}
+            onRequestClose={() => setIsModalVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalText}>{t("settings.modal_text")}</Text>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.confirmButton]}
+                    onPress={() => {
+                      setIsModalVisible(false);
+                      handleDeleteAccount();
+                    }}
+                  >
+                    <Text style={styles.buttonText}>
+                      {t("settings.modal_confirm")}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.cancelButton]}
+                    onPress={() => setIsModalVisible(false)}
+                  >
+                    <Text style={styles.buttonText}>
+                      {t("settings.modal_cancel")}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+           <ButtonComponent
             action={handleDeleteAccount}
           />
           <ButtonComponent
             title={"Editar datos"}
             action={() => navigation.navigate('Onboarding', {docRef})}
           />
+
         </View>
       </View>
     </ScrollView>
   );
 };
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo translúcido
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  button: {
+    padding: 10,
+    borderRadius: 5,
+    width: "40%",
+    alignItems: "center",
+  },
+  confirmButton: {
+    backgroundColor: "red",
+  },
+  cancelButton: {
+    backgroundColor: "gray",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
+  textScreen: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});

@@ -624,4 +624,8 @@ const styles = {
     padding: 50, // Combining padding from both containers
     backgroundColor: "#fff",
   },
+  textScreen: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 };
