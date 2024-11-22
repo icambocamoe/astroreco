@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Button, TouchableOpacity } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
@@ -25,16 +25,15 @@ import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import axios from "axios";
 
 
-export const HomeScreen = ({ route }) => {
+export const HomeScreen = ({ navigation, route }) => {
   const { user } = route.params;
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
-
+  const [fecha, setFecha] = useState(new Date());
   const contextLang = useContext(LanguageContext);
   const languageData = contextLang?.languageData;
   const setLanguageData = contextLang?.setLanguageData;
-
   const [loading, setLoading] = useState(false);
 
   if (loading) return <LoadingIndicator />;
@@ -42,8 +41,8 @@ export const HomeScreen = ({ route }) => {
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
   }
-  // Genera los estilos dinámicos pasando themeData
-  const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+  const dynamicStyles = dynamicStylesAppTheme(themeData);// Genera los estilos dinámicos pasando themeData
 
   /* const { languageData } = useContext(LanguajeContext); */
   const currentLanguage = languageData?.language || "spanish";
@@ -98,12 +97,11 @@ export const HomeScreen = ({ route }) => {
     favoriteMovies,
     setFavoriteMovies,
     favoriteBooks,
-    setFavoriteBooks
+    setFavoriteBooks,
+    astrologicalData,
+    setAstrologicalData
 
   } = useContext(HoroscopeContext);
-
-  
- 
 
   const sentiment = new Sentiment();
   // JSON object containing zodiac signs
@@ -265,7 +263,7 @@ export const HomeScreen = ({ route }) => {
               if (Object.keys(doc.data().favoriteMovies).length > 0) {
                 console.log("hay favoriteMovies");
                 console.log(doc.data().favoriteMovies)
-               
+
                 setFavoriteMovies(doc.data().favoriteMovies);
               } else {
                 console.log("no hay favoriteMovies");
@@ -398,6 +396,7 @@ export const HomeScreen = ({ route }) => {
       return null
     }*/
   };
+
   useEffect(() => {
     const queryUserRefData = async () => {
       try {
@@ -409,6 +408,7 @@ export const HomeScreen = ({ route }) => {
           querySnapshot.forEach((doc) => {
 
             setDocRef(doc.ref);
+            setAstrologicalData(doc.data().apiInfo.data);
             const sSign = getZodiacName(doc.data().apiInfo.data.sun.sign);
             const currentDate = new Date();// Get current date
             const year = currentDate.getFullYear();
@@ -465,6 +465,9 @@ export const HomeScreen = ({ route }) => {
     queryUserRefData();
   }, []);
 
+  useEffect(() => {
+
+  }, [])
   /*
     // make an express api to fetch this
     useEffect(() => {
@@ -538,6 +541,23 @@ export const HomeScreen = ({ route }) => {
     loadLanguage();
   }, []);
 
+
+  const dias = {
+    '1': 'Lunes',
+    '2': 'Martes',
+    '3': 'Miercoles',
+    '4': 'Jueves',
+    '5': 'Viernes',
+    '6': 'Sabado',
+    '7': 'Domingo',
+  }
+  function getDia(key) {
+    if (dias.hasOwnProperty(key)) {
+      return dias[key]; // Return the full zodiac name
+    } else {
+      return "Zodiac sign not found"; // Return a message if the key doesn't exist
+    }
+  }
   return (
     <ScrollView
       style={[
@@ -558,12 +578,39 @@ export const HomeScreen = ({ route }) => {
             dynamicStyles.dynamicViewContainer,
           ]}
         >
-          <Text style={[dynamicStyles.dynamicText]}>Home Screen</Text>
-          <Text style={[dynamicStyles.dynamicText]}>{t("home.title")}</Text>
-          <Text style={[dynamicStyles.dynamicText]}>
-            {" "}
-            {t("home.welcome_message")}
+          <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
+            Bienvenido, {astrologicalData.name}. Hoy es {getDia(fecha.getDay())}, {fecha.getDate()} de {fecha.getMonth()} de {fecha.getFullYear()}
           </Text>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                paddingTop: 40,
+                justifyContent: "center",
+                borderRadius: 5,
+                backgroundColor: 'transparent',
+              }}
+              onPress={() => navigation.navigate('BirthChart')}
+            >
+              <Text style={{ fontSize: 16 }}>
+                Ver tu Carta Natal
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                paddingTop: 40,
+                justifyContent: "center",
+                borderRadius: 5,
+                backgroundColor: 'transparent',
+              }}
+              onPress={() => navigation.navigate('Horoscope')}
+            >
+              <Text style={{ fontSize: 16 }}>
+                Revisar tu horoscopo de hoy
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ScrollView>

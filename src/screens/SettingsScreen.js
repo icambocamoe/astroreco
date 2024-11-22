@@ -280,7 +280,7 @@ export const SettingsScreen = ({ navigation, route }) => {
           />
            <ButtonComponent
             title={"Editar datos"}
-            action={handleEditAccount}
+            action={() => navigation.navigate('Horoscope')}
           />
         </View>
       </View>

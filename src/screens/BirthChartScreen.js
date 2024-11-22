@@ -24,14 +24,14 @@ import { ThemeContext } from "../context/ThemeContext";
 import { TitleComponent } from "../components/TitleComponent.js";
 import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
-
+import { HoroscopeContext } from "../context/HoroscopeContext";
 export function BirthChartScreen({ navigation, route }) {
   const { user } = route.params;
   console.log("home", user);
+  const {astrologicalData, setAstrologicalData}=useContext(HoroscopeContext);
   // Initialize state to store the documents
   const [aspects, setAspects] = useState({});
   const [chart, setChart] = useState({});
-  const [astrologicalData, setAstrologicalData] = useState({});
 
   const contextLang = useContext(LanguageContext);
   const languageData = contextLang?.languageData;
@@ -49,7 +49,7 @@ export function BirthChartScreen({ navigation, route }) {
       .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
   };
 
-  useEffect(() => {
+ /* useEffect(() => {
     const queryUserRefData = async () => {
       try {
         // Reference to the userRefData collection
@@ -66,7 +66,7 @@ export function BirthChartScreen({ navigation, route }) {
           querySnapshot.forEach((doc) => {
             //console.log(`Document ID: ${doc.id}, Data: `, doc.data().apiInfo);
             // Set state with the document data
-            setAstrologicalData(doc.data().apiInfo.data);
+            
           });
         } catch (error) {
           console.error("Error fetching user reference data: ", error);
