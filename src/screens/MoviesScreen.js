@@ -33,11 +33,12 @@ export default function MoviesScreen({ route }) {
   const { user } = route.params;
 
   //const { movies, favoriteMovies, setFavoriteMovies } =
-    //useContext(HoroscopeContext);
+  //useContext(HoroscopeContext);
 
-  const { docRef, movies, favoriteMovies, setFavoriteMovies } = useContext(HoroscopeContext);
+  const { docRef, movies, favoriteMovies, setFavoriteMovies } =
+    useContext(HoroscopeContext);
 
-  useEffect( () => {
+  useEffect(() => {
     const updateDatabase = async () => {
       try {
         await updateDoc(docRef, {
@@ -54,7 +55,6 @@ export default function MoviesScreen({ route }) {
     }
   }, [favoriteMovies]);
 
-
   const handleFavoritePress = (item) => {
     setFavoriteMovies((prevFavorites) => {
       const isFavorite = prevFavorites.some(
@@ -70,7 +70,6 @@ export default function MoviesScreen({ route }) {
         return [...prevFavorites, item];
       }
     });
-
   };
   //https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&title=avoid
 
@@ -96,42 +95,80 @@ export default function MoviesScreen({ route }) {
     ); // Check if item is in favorites
 
     return (
-      <View key={index} style={styles.card}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Image source={{ uri: item.img }} style={styles.image} />
-        <Text>Type: {item.title_type}</Text>
-        
-        <Text>Synopsis: {item.synopsis}</Text>
-        <Text>Rating: {item.rating}</Text>
-        <Text>Year: {item.year}</Text>
-        <Text>Runtime: {Math.floor(item.runtime / 60)} minutes</Text>
-        
+      <View
+        key={index}
+        style={[
+          styles.card,
+          {
+            borderWidth: 1,
+            borderColor: themeData.texto,
+            backgroundColor: themeData.vistas,
+          },
+        ]}
+      >
+        <Text style={[styles.title, dynamicStyles.dynamicText]}>
+          {item.title}
+        </Text>
+        <View style={styles.row}>
+          <Image source={{ uri: item.img }} style={styles.image} />
+          <View style={styles.column}>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Type: {item.title_type}
+            </Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Rating: {item.rating}
+            </Text>
+            <Text style={[dynamicStyles.dynamicText]}>Year: {item.year}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Runtime: {Math.floor(item.runtime / 60)} minutes
+            </Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Top 250: {item.top250}
+            </Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Top 250 TV: {item.top250tv}
+            </Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Title Date: {item.title_date}
+            </Text>
+          </View>
+        </View>
+        <Text style={[dynamicStyles.dynamicText, { textAlign: "justify" }]}>
+          Synopsis: {item.synopsis}
+        </Text>
+
         <Text></Text>
-        <Text>Top 250: {item.top250}</Text>
-        <Text>Top 250 TV: {item.top250tv}</Text>
-        <Text>Title Date: {item.title_date}</Text>
-        <TouchableOpacity
-          onPress={() => openUrl(`https://www.imdb.com/title/${item.imdb_id}`)}
-        >
-          <Ionicons name="information-circle" size={30} color={themeData.texto} />
-          {/* <Text style={styles.link}>See in IMDB</Text> */}
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleFavoritePress(item)}>
-          <Ionicons
-            name={isFavorite ? "heart" : "heart-outline"}
-            size={30}
-            /* color={isFavorite ? "red" : "black"} */
-            color={themeData.texto}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            openUrl(`https://www.netflix.com/watch/${item.netflix_id}`)
-          }
-        >
-          <Ionicons name="play" size={30} color={themeData.texto} />
-          {/* <Text style={styles.link}>Watch in Netflix</Text> */}
-        </TouchableOpacity>
+
+        <View style={styles.rowIcon}>
+          <TouchableOpacity
+            onPress={() =>
+              openUrl(`https://www.imdb.com/title/${item.imdb_id}`)
+            }
+          >
+            <Ionicons
+              name="information-circle"
+              size={30}
+              color={themeData.texto}
+            />
+            {/* <Text style={styles.link}>See in IMDB</Text> */}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleFavoritePress(item)}>
+            <Ionicons
+              name={isFavorite ? "heart" : "heart-outline"}
+              size={30}
+              /* color={isFavorite ? "red" : "black"} */
+              color={themeData.texto}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              openUrl(`https://www.netflix.com/watch/${item.netflix_id}`)
+            }
+          >
+            <Ionicons name="play" size={30} color={themeData.texto} />
+            {/* <Text style={styles.link}>Watch in Netflix</Text> */}
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -218,6 +255,15 @@ const styles = StyleSheet.create({
     width: "auto",
     //justifyContent: "center",
     gap: 23,
+  },
+  rowIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    //backgroundColor: "red",
+    width: "auto",
+    //justifyContent: "center",
+    gap: 60,
+    justifyContent: "center",
   },
   column: {
     flexDirection: "column",

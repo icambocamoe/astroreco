@@ -1,10 +1,21 @@
 import React, { useContext } from "react";
-import { View, Text, ScrollView, TouchableOpacity, FlatList, StyleSheet, Image, Linking } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Image,
+  Linking,
+} from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { HoroscopeContext } from "../context/HoroscopeContext";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 
 export const FavoriteMoviesScreen = () => {
   const context = useContext(ThemeContext); // Obtiene el contexto
@@ -22,43 +33,80 @@ export const FavoriteMoviesScreen = () => {
   };
   // Helper function to render individual entries
   const renderItem = (movie, index) => {
-    const isFavorite = favoriteMovies.some((favorite) => favorite.imdb_id === movie.item.imdb_id); // Check if movie.item is in favorites
+    const isFavorite = favoriteMovies.some(
+      (favorite) => favorite.imdb_id === movie.item.imdb_id
+    ); // Check if movie.item is in favorites
 
     return (
-      <View key={index} style={styles.card}>
-        <Image source={{ uri: movie.item.img }} style={styles.image} />
-        <Text style={styles.title}>{movie.item.title}</Text>
-        <Text>Type: {movie.item.title_type}</Text>
+      <View key={index} style={[
+        styles.card,
+        {
+          borderWidth: 1,
+          borderColor: themeData.texto,
+          backgroundColor: themeData.vistas,
+        },
+      ]}>
+        <Text style={[styles.title , dynamicStyles.dynamicText]}>{movie.item.title}</Text>
+        <View style={styles.row}>
+          <Image source={{ uri: movie.item.img }} style={styles.image} />
+          <View style={styles.column}>
+            <Text style={[dynamicStyles.dynamicText]}>Type: {movie.item.title_type}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Rating: {movie.item.rating}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Year: {movie.item.year}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Runtime: {Math.floor(movie.item.runtime / 60)} minutes</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Top 250: {movie.item.top250}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Top 250 TV: {movie.item.top250tv}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Title Date: {movie.item.title_date}</Text>
+          </View>
+        </View>
+        
+        <Text style={[dynamicStyles.dynamicText, {textAlign: "justify"}]}>Synopsis: {movie.item.synopsis}</Text>
+
+        <View style={styles.rowIcon}>
+       
+        
+        
+        <TouchableOpacity
+          onPress={() =>
+            openUrl(`https://www.imdb.com/title/${movie.item.imdb_id}`)
+          }
+        >
+          {/* <Text style={styles.link}>See in IMDB</Text> */}
+          <Ionicons name="information-circle" size={30} color={themeData.texto} />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
             openUrl(`https://www.netflix.com/watch/${movie.item.netflix_id}`)
           }
         >
-          <Text style={styles.link}>Watch in Netflix</Text>
+          {/* <Text style={styles.link}>Watch in Netflix</Text> */}
+          <Ionicons name="play" size={30} color={themeData.texto} />
         </TouchableOpacity>
-        <Text>Synopsis: {movie.item.synopsis}</Text>
-        <Text>Rating: {movie.item.rating}</Text>
-        <Text>Year: {movie.item.year}</Text>
-        <Text>Runtime: {Math.floor(movie.item.runtime / 60)} minutes</Text>
-        <TouchableOpacity
-          onPress={() => openUrl(`https://www.imdb.com/title/${movie.item.imdb_id}`)}
-        >
-          <Text style={styles.link}>See in IMDB</Text>
-        </TouchableOpacity>
-        <Text></Text>
-        <Text>Top 250: {movie.item.top250}</Text>
-        <Text>Top 250 TV: {movie.item.top250tv}</Text>
-        <Text>Title Date: {movie.item.title_date}</Text>
-
+        </View>
       </View>
     );
   };
   return (
-    <ScrollView style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle]}>
-      <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
+    <ScrollView
+      style={[
+        stylesAppTheme.scrollViewStyle,
+        dynamicStyles.dynamicScrollViewStyle,
+      ]}
+    >
+      <View
+        style={[
+          stylesAppTheme.mainContainer,
+          dynamicStyles.dynamicMainContainer,
+        ]}
+      >
         {/* <TitleComponent /> */}
-        <View style={[stylesAppTheme.viewContainer, dynamicStyles.dynamicViewContainer]}>
-          <Text style={[dynamicStyles.dynamicText]}>Favorite Movies</Text>
+        <View
+          style={[
+            stylesAppTheme.viewContainer,
+            dynamicStyles.dynamicViewContainer,
+          ]}
+        >
+          {/* <Text style={[dynamicStyles.dynamicText]}>Favorite Movies</Text> */}
           <FlatList
             data={favoriteMovies}
             keyExtractor={(item, index) => `${item.title || index}`}
@@ -92,10 +140,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
   },
   image: {
     width: 100,
-    height: 100,
+    height: 150,
     marginVertical: 10,
   },
   row: {
@@ -112,5 +161,26 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     textAlign: "center",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    //backgroundColor: "red",
+    width: "auto",
+    //justifyContent: "center",
+    gap: 8,
+  },
+  rowIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    //backgroundColor: "red",
+    width: "auto",
+    //justifyContent: "center",
+    gap: 60,
+    justifyContent: "center",
+  },
+  column: {
+    flexDirection: "column",
+    width: 150,
   },
 });

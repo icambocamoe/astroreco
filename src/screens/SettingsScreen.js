@@ -289,7 +289,12 @@ export const SettingsScreen = ({ navigation, route }) => {
           />
           <Text></Text>
           <ButtonComponent
-            title={"Delete account"}
+            title={t("settings.button_edit_data")}
+            action={handleEditAccount}
+          />
+          <Text></Text>
+          <ButtonComponent
+            title={t("settings.button_delete_account")}
             //action={handleDeleteAccount}
             action={() => setIsModalVisible(true)} // Mostrar el modal
           />
@@ -329,10 +334,7 @@ export const SettingsScreen = ({ navigation, route }) => {
             </View>
           </Modal>
 
-           <ButtonComponent
-            title={"Editar datos"}
-            action={handleEditAccount}
-          />
+           
 
         </View>
       </View>
