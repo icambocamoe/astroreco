@@ -33,10 +33,17 @@ import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
 export default function SongsScreen({ route, onFavorite }) {
   const { user } = route.params;
+
+  //const { songs, favoriteSongs, setFavoriteSongs } =
+   // useContext(HoroscopeContext);
+
   const { docRef, songs, favoriteSongs, setFavoriteSongs } = useContext(HoroscopeContext);
+
 
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
+
+
 
   useEffect( () => {
     const updateDatabase = async () => {
@@ -54,9 +61,12 @@ export default function SongsScreen({ route, onFavorite }) {
         updateDatabase();
       }
   }, [favoriteSongs]);
+
   const handleFavoritePress = (item) => {
     setFavoriteSongs((prevFavorites) => {
-      const isFavorite = prevFavorites.some((favorite) => favorite.name === item.name);
+      const isFavorite = prevFavorites.some(
+        (favorite) => favorite.name === item.name
+      );
       if (isFavorite) {
         // Remove the item from favorites
         return prevFavorites.filter((favorite) => favorite.name !== item.name);
@@ -65,11 +75,10 @@ export default function SongsScreen({ route, onFavorite }) {
         return [...prevFavorites, item];
       }
     });
-    
   };
-  useEffect(() =>{
-    console.log(favoriteSongs)
-  },[favoriteSongs])
+  useEffect(() => {
+    console.log(favoriteSongs);
+  }, [favoriteSongs]);
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
   }
@@ -83,23 +92,30 @@ export default function SongsScreen({ route, onFavorite }) {
   };
   // Helper function to render individual entries
   const renderItem = (item, index) => {
-    const isFavorite = favoriteSongs.some((favorite) => favorite.name === item.name); // Check if item is in favorites
-
+    const isFavorite = favoriteSongs.some(
+      (favorite) => favorite.name === item.name
+    ); // Check if item is in favorites
 
     return (
-      <View key={index} style={styles.card}>
-        <Text style={styles.title}>{item.name}</Text>
+      <View key={index} style={[styles.card, {borderWidth: 1, borderColor: themeData.texto, backgroundColor: themeData.vistas}]}>
+        <Text style={[styles.title, dynamicStyles.dynamicText]}>{item.name}</Text>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text>Artist: {item.artist?.name}</Text>
-            <Text>Duration: {item.duration} seconds</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Artist: {item.artist?.name}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Duration: {item.duration} seconds</Text>
           </View>
+
           <TouchableOpacity onPress={() => handleFavoritePress(item)}>
             <Ionicons
               name={isFavorite ? "heart" : "heart-outline"}
               size={30}
-              color={isFavorite ? "red" : "black"}
+              //color={isFavorite ? "red" : "black"}
+              color={themeData.texto}
             />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openUrl(item.url)}>
+            {/* <Text style={styles.link}>Listen on Last.fm</Text>  */}
+            <Ionicons name="play" size={30} color={themeData.texto} />
           </TouchableOpacity>
         </View>
         {/* <View style={styles.row}>
@@ -118,9 +134,6 @@ export default function SongsScreen({ route, onFavorite }) {
         </View> */}
         <View /* style={styles.row} */>
           {/* Touchable link to open the URL */}
-          <TouchableOpacity onPress={() => openUrl(item.url)}>
-            <Text style={styles.link}>Listen on Last.fm</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -157,7 +170,9 @@ export default function SongsScreen({ route, onFavorite }) {
               {songs[category].length > 0 ? (
                 songs[category].map(renderItem)
               ) : (
-                <Text>No items in this category.</Text>
+                <Text style={dynamicStyles.dynamicText}>
+                  No items in this category.
+                </Text>
               )}
             </View>
           ))}
@@ -188,6 +203,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
+    //backgroundColor: "red",
   },
   image: {
     width: 100,
@@ -198,8 +215,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     //backgroundColor: "red",
+    width: "auto",
     //justifyContent: "center",
-    gap: 90,
+    gap: 23,
   },
   column: {
     flexDirection: "column",
