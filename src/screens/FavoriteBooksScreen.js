@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, FlatList, StyleSheet, Image, } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
@@ -13,32 +13,26 @@ export const FavoriteBooksScreen = () => {
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
   }
+  useEffect(() => {
+    console.log("favoritos ", favoriteBooks)
+  }, [favoriteBooks])
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
   // Helper function to render individual entries
-   // Helper function to render individual entries
-   const renderItem = (item, index) => {
-    const isFavorite = favoriteBooks.some((favorite) => favorite.name === item.name); // Check if item is in favorites
-
-
+  // Helper function to render individual entries
+  const renderItem = (book, index) => {
     return (
       <View key={index} style={styles.card}>
-        
-        <Image source={{ uri: item.imgUrl }} style={styles.image} />
-        <Text style={styles.title}>{item.title}</Text>
+
+        <Image source={{ uri: book.item.imgUrl }} style={styles.image} />
+        <Text style={styles.title}>{book.item.title}</Text>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text>Author: {item.author}</Text>
-            <Text>Genre: {item.genre} </Text>
-            <Text>Format: {item.format}</Text>
+            <Text>Author: {book.item.author}</Text>
+            <Text>Genre: {book.item.genre} </Text>
+            <Text>Format: {book.item.format}</Text>
           </View>
-          <TouchableOpacity onPress={() => handleFavoritePress(item)}>
-            <Ionicons
-              name={isFavorite ? "heart" : "heart-outline"}
-              size={30}
-              color={isFavorite ? "red" : "black"}
-            />
-          </TouchableOpacity>
+
         </View>
         {/* <View style={styles.row}>
           <TouchableOpacity

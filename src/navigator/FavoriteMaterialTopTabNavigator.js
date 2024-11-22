@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { FavoriteMoviesScreen } from "../screens/FavoriteMoviesScreen.js";
 import { FavoriteSongsScreen } from "../screens/FavoriteSongsScreen.js";
+import { FavoriteBooksScreen } from "../screens/FavoriteBooksScreen.js";
 
 
 
@@ -20,45 +21,45 @@ export function FavoriteMaterialTopTabNavigator({ route }) {
   }
 
   return (
-    <Tab.Navigator style={{marginTop:24}}
-    
-    screenOptions={({ route }) => ({
-     /*  tabBarStyle: {
-        height: 150, // Ajusta la altura aquí
-      }, */
-      tabBarLabelStyle: {
-        display: 'none', // Oculta completamente el texto del label
-      },
-      
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
+    <Tab.Navigator style={{ marginTop: 24 }}
+
+      screenOptions={({ route }) => ({
+        /*  tabBarStyle: {
+           height: 150, // Ajusta la altura aquí
+         }, */
+        tabBarLabelStyle: {
+          display: 'none', // Oculta completamente el texto del label
+        },
+
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
       /*   if (route.name === "BirthChart") {
           iconName = focused ? "map" : "map-outline"; // Cambia el icono según si está enfocado o no
         } else if (route.name === "Horoscope") {
           iconName = focused ? "star" : "star-outline"; // Cambia el icono según si está enfocado o no
         } else */ if (route.name === "S") {
-          iconName = focused ? "musical-notes" : "musical-notes-outline"; // Cambia el icono según si está enfocado o no
-        } else if (route.name === "M") {
-          iconName = focused ? "film" : "film-outline"; // Cambia el icono según si está enfocado o no
-        } /* else if (route.name === "Settings") {
-          iconName = focused ? "settings" : "settings-outline"; // Cambia el icono según si está enfocado o no
-        } else if (route.name === "HomeScreen") {
+            iconName = focused ? "musical-notes" : "musical-notes-outline"; // Cambia el icono según si está enfocado o no
+          } else if (route.name === "M") {
+            iconName = focused ? "film" : "film-outline"; // Cambia el icono según si está enfocado o no
+          } else if (route.name === "B") {
+          iconName = focused ? "book" : "book-outline"; // Cambia el icono según si está enfocado o no
+        } /*else if (route.name === "HomeScreen") {
           iconName = focused ? "home" : "home-outline"; // Cambia el icono según si está enfocado o no
         } */
 
-        // Retorna el ícono correspondiente de Ionicons
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor:  themeData.texto  /* "black" */, // Cambia el color del ícono cuando la pestaña está activa
-      tabBarInactiveTintColor: "gray",
-      tabBarStyle: { backgroundColor:  themeData.fondo  /* "white" */ },
-      tabBarIndicatorStyle: {
-        backgroundColor: themeData.texto, // Cambia el color de la línea debajo del icono
-        height: 1, // Ajusta el grosor del indicador si es necesario
-      },
-    })}
-    
+          // Retorna el ícono correspondiente de Ionicons
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: themeData.texto  /* "black" */, // Cambia el color del ícono cuando la pestaña está activa
+        tabBarInactiveTintColor: "gray",
+        tabBarStyle: { backgroundColor: themeData.fondo  /* "white" */ },
+        tabBarIndicatorStyle: {
+          backgroundColor: themeData.texto, // Cambia el color de la línea debajo del icono
+          height: 1, // Ajusta el grosor del indicador si es necesario
+        },
+      })}
+
     >
       <Tab.Screen
         name="S"
@@ -66,7 +67,7 @@ export function FavoriteMaterialTopTabNavigator({ route }) {
         initialParams={{ user }} // Pass 'user' to HoroscopeScreen
         options={{
           headerShown: false,
-         /*  tabBarLabel: "", // Esto ocultará el nombre en la pestaña */
+          /*  tabBarLabel: "", // Esto ocultará el nombre en la pestaña */
         }}
       />
       <Tab.Screen
@@ -75,7 +76,15 @@ export function FavoriteMaterialTopTabNavigator({ route }) {
         initialParams={{ user }} // Pass 'user' to HoroscopeScreen
         options={{
           headerShown: false,
-         /*  tabBarLabel: "", // Esto ocultará el nombre en la pestaña */
+          /*  tabBarLabel: "", // Esto ocultará el nombre en la pestaña */
+        }}
+      /><Tab.Screen
+        name="B"
+        component={FavoriteBooksScreen}
+        initialParams={{ user }} // Pass 'user' to HoroscopeScreen
+        options={{
+          headerShown: false,
+          /*  tabBarLabel: "", // Esto ocultará el nombre en la pestaña */
         }}
       />
     </Tab.Navigator>
