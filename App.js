@@ -16,18 +16,22 @@ import {
   LanguageContext,
   LanguageProvider,
 } from "./src/context/LanguageContext.js";
+import "./src/context/HoroscopeContext.js";
+import { HoroscopeProvider } from "./src/context/HoroscopeContext.js";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <LanguageProvider>
-        <UserProvider>
-          <ThemeProvider>
-            <StatusBar style="dark" />
-            <AppContent />
-          </ThemeProvider>
-        </UserProvider>
-      </LanguageProvider>
+      <HoroscopeProvider>
+        <LanguageProvider>
+          <UserProvider>
+            <ThemeProvider>
+              <StatusBar style="dark" />
+              <AppContent />
+            </ThemeProvider>
+          </UserProvider>
+        </LanguageProvider>
+      </HoroscopeProvider>
     </NavigationContainer>
   );
 }

@@ -5,12 +5,14 @@ import RNPickerSelect from "react-native-picker-select";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
-import { signOut } from "firebase/auth"; // Import Firebase signOut method
+import { deleteUser, signOut, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth"; // Import Firebase signOut method
 import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { ColorPaletteTheme } from "../theme/ColorPaletteTheme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LanguajeContext } from "../context/LanguageContext.js";
+import { Alert } from "react-native";
+
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
@@ -34,7 +36,43 @@ export const SettingsScreen = ({ navigation, route }) => {
       console.error("Error signing out: ", error);
     }
   };
+  const handleDeleteAccount = async () => {
+    try {
+      const user = auth.currentUser;
 
+      if (!user) {
+        console.error("No user is currently signed in.");
+        return;
+      }
+
+      // Re-authenticate the user before account deletion
+      const credential = EmailAuthProvider.credential(
+        auth,
+        user.email,
+        "user_password_here" // Replace with the user's password
+      );
+      await reauthenticateWithCredential(user, credential);
+
+      // Delete the user
+      await deleteUser(user);
+
+      // Provide feedback and navigate to the Login screen
+      Alert.alert("Account deleted successfully");
+      navigation.replace("Login");
+    } catch (error) {
+      console.error("Error deleting user: ", error);
+
+      // Handle specific errors
+      if (error.code === "auth/requires-recent-login") {
+        Alert.alert(
+          "Reauthentication Required",
+          "Please log in again to delete your account."
+        );
+      } else {
+        Alert.alert("Error", "An error occurred while deleting your account.");
+      }
+    }
+  }
   if (!themeData || !setThemeData) {
     return null;
   }
@@ -194,6 +232,10 @@ export const SettingsScreen = ({ navigation, route }) => {
           <ButtonComponent
             title={"Sign out"}
             action={handleSignOut}
+          />
+          <ButtonComponent
+            title={"Delete account"}
+            action={handleDeleteAccount}
           />
         </View>
       </View>

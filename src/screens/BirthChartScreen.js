@@ -77,6 +77,7 @@ export function BirthChartScreen({ navigation, route }) {
       console.error("Error signing out: ", error);
     }
   }; */
+  
   const PlanetCard = ({ planet }) => {
     return (
       <View style={[styles.card]}>

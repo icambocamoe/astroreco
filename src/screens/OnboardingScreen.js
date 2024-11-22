@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -8,12 +8,39 @@ import timezones from '../../assets/objects/timezones.js';
 import RNPickerSelect from 'react-native-picker-select';
 import months from '../../assets/objects/months.js';
 import CitySearch from './CitySearchScreen.js';
+import { HoroscopeContext } from "../context/HoroscopeContext";
+import axios from "axios";
 
 const OnboardingScreen = ({ navigation, route }) => {
     const { docRef } = route.params; // Get email and password from navigation params
+    const { sunSign, setSunSign, setHoroscope } = useContext(HoroscopeContext); 
+     // JSON object containing zodiac signs
+    const zodiacSigns = {
+      Ari: "aries",
+      Tau: "taurus",
+      Gem: "gemini",
+      Can: "cancer",
+      Leo: "leo",
+      Vir: "virgo",
+      Lib: "libra",
+      Sco: "scorpio",
+      Sag: "sagittarius",
+      Sap: "capricorn",
+      Aqu: "aquarius",
+      Pis: "pisces",
+    };  // Function to get the zodiac name by key
+    function getZodiacName(key) {
+      // Check if the key exists in the zodiacSigns object
+      if (zodiacSigns.hasOwnProperty(key)) {
+        return zodiacSigns[key]; // Return the full zodiac name
+      } else {
+        return "Zodiac sign not found"; // Return a message if the key doesn't exist
+      }
+    }
     let username;
     let userUID;
     const [user, setUser] = useState([]);//userCredential.user.uid;
+
     useEffect(() => {
         const fetchDocument = async () => {
             try {
@@ -40,6 +67,54 @@ const OnboardingScreen = ({ navigation, route }) => {
         fetchDocument();
     }, []); // Empty dependency array ensures this runs only once when the screen loads
 
+    const getHoroscope = async (options, formattedDate) => {
+        try {
+            //console.log(options.sunsign)
+            const response = await axios.request(options);
+            setHoroscope({
+                horoscope: response.data.message,
+                date: formattedDate,
+            });
+            console.log(response.data);
+            await updateDoc(docRef, {
+                horoscope: {
+                    horoscope: response.data.message,
+                    date: formattedDate,
+                },
+                updatedAt: serverTimestamp(), // Update the timestamp as well
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        console.log("fetching horoscope")
+        const currentDate = new Date();// Get current date
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+        const day = String(currentDate.getDate()).padStart(2, "0");
+        const formattedDate = `${year}-${month}-${day}`;
+        if (sunSign) {
+            const options = {
+                method: "GET",
+                url: "https://daily-horoscope8.p.rapidapi.com/daily",
+                params: {
+                    sign: sunSign,
+                    date: formattedDate,
+                },
+                headers: {
+                    "x-rapidapi-key":
+                        "2d2f1d9305mshe94bce5818fa2a9p1a5f00jsn140ed873e2a4",
+                    "x-rapidapi-host": "daily-horoscope8.p.rapidapi.com",
+                },
+            };
+            try {
+                getHoroscope(options, formattedDate);
+            } catch (error) {
+                console.error(error)
+            }
+        }
+    }, [sunSign]);
     const { control, handleSubmit, setValue, watch } = useForm({
         defaultValues: {
             year: '2024',
@@ -99,7 +174,7 @@ const OnboardingScreen = ({ navigation, route }) => {
         setValue('timezone', city.timezone);  // Store longitude
         setValue('nation', city.nation);  // Store longitude
 
-       // console.log(`City: ${city.name}, Latitude: ${city.lat}, Longitude: ${city.lng}`);
+        // console.log(`City: ${city.name}, Latitude: ${city.lat}, Longitude: ${city.lng}`);
     };
 
     useEffect(() => {
@@ -162,16 +237,18 @@ const OnboardingScreen = ({ navigation, route }) => {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-           // console.log(`result: ${JSON.stringify(result)}`);
-            await updateDoc(docRef, {
-                apiInfo: result,
-                updatedAt: serverTimestamp() // Update the timestamp as well
-            });
- 
+            // console.log(`result: ${JSON.stringify(result)}`);
+            setSunSign(getZodiacName(result.data.sun.sign)) <
+                await updateDoc(docRef, {
+                    apiInfo: result,
+                    updatedAt: serverTimestamp() // Update the timestamp as well
+                });
+
         } catch (error) {
             console.error(error);
         }
         console.log("userIDRefser", user);
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a 2-second delay
         navigation.navigate('Home', { user });
     };
     return (
@@ -265,9 +342,9 @@ const OnboardingScreen = ({ navigation, route }) => {
                         />
                     </View>
                 </View>
-
+                <Text style={styles.sectionLabel}>Lugar de Nacimiento</Text>
                 <CitySearch onCitySelected={handleCitySelection} />
-            
+
                 <View style={styles.buttonContainer}>
                     <Button title="Finish Onboarding" onPress={handleSubmit(onSubmit)} />
                 </View>
