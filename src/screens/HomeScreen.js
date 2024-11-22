@@ -5,7 +5,7 @@ import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LanguajeContext } from "../context/LanguageContext";
+import { LanguageContext } from "../context/LanguageContext";
 import Languages from "../lang/Languages.json";
 import { LoadingIndicator } from "../components/LoadingIndicator";
 
@@ -14,14 +14,13 @@ export const HomeScreen = () => {
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
 
-  const contextLang = useContext(LanguajeContext);
+  const contextLang = useContext(LanguageContext);
   const languageData = contextLang?.languageData;
   const setLanguageData = contextLang?.setLanguageData;
 
   const [loading, setLoading] = useState(false);
 
-  if (loading)
-    return <LoadingIndicator />
+  if (loading) return <LoadingIndicator />;
 
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
@@ -79,14 +78,9 @@ export const HomeScreen = () => {
     const loadLanguage = async () => {
       try {
         const storedLanguage = await AsyncStorage.getItem("appLanguage");
-        console.log("Trying to load language");
-        console.log("storeLanguaje", storedLanguage);
-        if (storedLanguage) {
-          console.log("Language found:", storedLanguage);
-          console.log("LanguageContext => ", languageData);
 
+        if (storedLanguage) {
           setLanguageData({ language: storedLanguage }); // Corrige el estado del contexto
-          console.log("LanguageContext => ", languageData);
         }
       } catch (error) {
         console.error("Error loading language:", error);
