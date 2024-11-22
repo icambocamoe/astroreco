@@ -15,7 +15,7 @@ import React, { createContext, useState, ReactNode } from "react";
 
 const defaultLanguage = { language: "spanish" }; // Define el estado por defecto claramente
 
-export const LanguajeContext = createContext(
+export const LanguageContext = createContext(
   /* <ThemeContextType | undefined> */ undefined
 );
 
@@ -27,8 +27,8 @@ export const LanguageProvider /* : React.FC<{ children: ReactNode }> */ = ({
   );
 
   return (
-    <LanguajeContext.Provider value={{ languageData, setLanguageData }}>
+    <LanguageContext.Provider value={{ languageData, setLanguageData }}>
       {children}
-    </LanguajeContext.Provider>
+    </LanguageContext.Provider>
   );
 };

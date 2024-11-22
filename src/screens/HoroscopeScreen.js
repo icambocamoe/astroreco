@@ -13,9 +13,10 @@ import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { TitleComponent } from "../components/TitleComponent.js";
 import { ThemeContext } from "../context/ThemeContext.js";
+
+import { LanguageContext } from "../context/LanguageContext.js";
 import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
-import { LanguajeContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 import { LoadingIndicator } from "../components/LoadingIndicator.js";
 
@@ -24,7 +25,7 @@ export default function HoroscopeScreen({ route }) {
   const { user } = route.params;
 
 
-  const contextLang = useContext(LanguajeContext);
+  const contextLang = useContext(LanguageContext);
   const languageData = contextLang?.languageData;
   const currentLanguage = languageData?.language || "spanish";
 

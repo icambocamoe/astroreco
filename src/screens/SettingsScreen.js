@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, ScrollView, Button } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import RNPickerSelect from "react-native-picker-select";
@@ -10,7 +10,7 @@ import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { ColorPaletteTheme } from "../theme/ColorPaletteTheme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LanguajeContext } from "../context/LanguageContext.js";
+import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 import { Alert } from "react-native";
 
@@ -24,9 +24,9 @@ export const SettingsScreen = ({ navigation, route }) => {
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
 
-  const contextLang = useContext(LanguajeContext); // Obtiene el contexto
-  const languageData = contextLang?.languajeData;
-  const setLanguageData = contextLang?.setLanguajeData;
+  const contextLang = useContext(LanguageContext); // Obtiene el contexto
+  const languageData = contextLang?.languageData;
+  const setLanguageData = contextLang?.setLanguageData;
 
   const currentLanguage = languageData?.language || "spanish";
 
@@ -122,6 +122,31 @@ export const SettingsScreen = ({ navigation, route }) => {
       console.error("Error saving language:", error);
     }
   };
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        // Carga el tema guardado
+        const savedTheme = await AsyncStorage.getItem("themeColors");
+        if (savedTheme) {
+          const parsedTheme = JSON.parse(savedTheme);
+          setThemeData(parsedTheme);
+          setSelectedTheme(parsedTheme.name || "claro00"); // Asegúrate de usar el nombre del tema
+        }
+
+        // Carga el idioma guardado
+        const savedLanguage = await AsyncStorage.getItem("appLanguage");
+        if (savedLanguage) {
+          setLanguageData({ language: savedLanguage });
+          setSelectedLanguage(savedLanguage);
+        }
+      } catch (error) {
+        console.error("Error loading settings:", error);
+      }
+    };
+
+    loadSettings();
+  }, [setThemeData, setLanguageData]);
 
   return (
     <ScrollView
@@ -219,8 +244,8 @@ export const SettingsScreen = ({ navigation, route }) => {
               //{ label: "Light Clásico", value: "claro00" },
               { label: "Spanish", value: "spanish" },
               { label: "English", value: "english" },
-              { label: "Japanese", value: "japanese" },
-              { label: "Chinese", value: "chinese" },
+              /* { label: "Japanese", value: "japanese" },
+              { label: "Chinese", value: "chinese" }, */
             ]}
             style={{
               inputAndroid: {
