@@ -37,11 +37,13 @@ export function BirthChartScreen({ navigation, route }) {
   const languageData = contextLang?.languageData;
   const currentLanguage = languageData?.language || "spanish";
 
-/*   const [renderKey, setRenderKey] = useState(0);
+  // Estado para forzar el re-render
+  /* const [renderKey, setRenderKey] = useState(0);
 
-  useEffect(() => {
-    setRenderKey((prevKey) => prevKey + 1); // Cambia el estado para forzar el re-render
-  }, [currentLanguage]); // Solo se ejecuta cuando cambia el idioma */
+useEffect(() => {
+  // Cuando cambie el idioma, forzar un re-render
+  setRenderKey((prevKey) => prevKey + 1);
+}, [currentLanguage]); // Dependencia en el idioma */
 
   const t = (keyPath) => {
     return keyPath
@@ -95,7 +97,7 @@ export function BirthChartScreen({ navigation, route }) {
       console.error("Error signing out: ", error);
     }
   }; */
-  
+
   const PlanetCard = ({ planet }) => {
     return (
       <View style={[styles.card]}>
@@ -129,7 +131,7 @@ export function BirthChartScreen({ navigation, route }) {
   const dynamicStyles = dynamicStylesAppTheme(themeData);
 
   return (
-    <ScrollView 
+    <ScrollView /*  key={renderKey} */
       style={[
         dynamicStyles.dynamicScrollViewStyle,
         stylesAppTheme.scrollViewStyle,
@@ -159,7 +161,7 @@ export function BirthChartScreen({ navigation, route }) {
         >
           <View>
             <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
-              {t("birthchart.title")} {astrologicalData.name}
+              {t("birthchart.title")} {/* {astrologicalData.name} */}
             </Text>
             <Text style={[styles.subheader, dynamicStyles.dynamicText]}>
               {t("birthchart.subtitle")}

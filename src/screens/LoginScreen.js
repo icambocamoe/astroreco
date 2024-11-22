@@ -203,6 +203,7 @@ export default function LoginScreen({ navigation }) {
                 {t("login.text_link")}
               </Text>
             </TouchableOpacity>
+            
           </View>
         </View>
       </View>

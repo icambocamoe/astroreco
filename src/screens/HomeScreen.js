@@ -523,11 +523,11 @@ export const HomeScreen = ({ route }) => {
             dynamicStyles.dynamicViewContainer,
           ]}
         >
-          <Text style={[dynamicStyles.dynamicText]}>Home Screen</Text>
-          <Text style={[dynamicStyles.dynamicText]}>{t("home.title")}</Text>
-          <Text style={[dynamicStyles.dynamicText]}>
+          {/* <Text style={[dynamicStyles.dynamicText]}>Home Screen</Text> */}
+          {/* <Text style={[dynamicStyles.dynamicText]}>{t("home.title")}</Text> */}
+          <Text style={[dynamicStyles.dynamicText, styles.textScreen]}>
             {" "}
-            {t("home.welcome_message")}
+            {t("home.welcome_message")} 
           </Text>
         </View>
       </View>
@@ -541,5 +541,9 @@ const styles = {
     paddingHorizontal: 20,
     padding: 50, // Combining padding from both containers
     backgroundColor: "#fff",
+  },
+  textScreen: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 };

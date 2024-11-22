@@ -151,12 +151,12 @@ export default function BooksScreen({ route, onFavorite }) {
                                     )
                                 ) : (
 
-                                    <Text>No items in this category.</Text>
+                                    <Text style={ dynamicStyles.dynamicText}>No items in this category.</Text>
                                 )}
                             </View>
                         ))
                     ) : (
-                        <Text>No data available.</Text>
+                        <Text style={ dynamicStyles.dynamicText}>No data available.</Text>
                     )}
                 </View>
             </View>

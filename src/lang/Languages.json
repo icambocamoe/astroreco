@@ -21,7 +21,7 @@
       "button_text": "Continuar"
     },
     "birthchart":{
-      "title": "Carta astrológica: ",
+      "title": "Carta astrológica",
       "subtitle": "Información de nacimiento: ",
       "date": "Fecha: ",
       "time": "Hora: ",
@@ -31,11 +31,14 @@
     },
     "settings": {
       "title": "Configuración",
-      "language_label": "Idioma",
-      "theme_label": "Tema",
+      "language_label": "Idioma de la app",
+      "theme_label": "Tema de la app",
       "placeholder_theme": "Selecciona un tema",
       "placeholder_language": "Selecciona un idioma",
-      "button_sign_out": "cerrar sesion"
+      "button_sign_out": "cerrar sesion",
+      "modal_text": "¿Seguro que deseas borrar tu cuenta?",
+      "modal_confirm": "Eliminar",
+      "modal_cancel": "Cancelar"
 
     },
     "profile": {
@@ -70,7 +73,7 @@
       "button_text": "Continue"
     },
     "birthchart":{
-      "title": "Astrological chart: ",
+      "title": "Astrological chart",
       "subtitle": "Birth Information: ",
       "date": "Date: ",
       "time": "Time: ",
@@ -80,11 +83,14 @@
     },
     "settings": {
       "title": "Settings",
-      "language_label": "Language",
-      "theme_label": "Theme",
+      "language_label": "App language",
+      "theme_label": "App theme",
       "placeholder_theme": "Select a theme",
       "placeholder_language": "Select a language",
-      "button_sign_out": "sign out"
+      "button_sign_out": "sign out",
+      "modal_text": "Are you sure you want to delete your account?",
+      "modal_confirm": "Delete",
+      "modal_cancel": "Cancel"
     },
     "profile": {
       "title": "Profile",
