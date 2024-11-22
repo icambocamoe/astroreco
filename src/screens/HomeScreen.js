@@ -592,7 +592,7 @@ export const HomeScreen = ({ navigation, route }) => {
               }}
               onPress={() => navigation.navigate('BirthChart')}
             >
-              <Text style={{ fontSize: 16 }}>
+              <Text style={[{ fontSize: 16 }, dynamicStyles.dynamicText]}>
                 Ver tu Carta Natal
               </Text>
             </TouchableOpacity>
@@ -606,7 +606,7 @@ export const HomeScreen = ({ navigation, route }) => {
               }}
               onPress={() => navigation.navigate('Horoscope')}
             >
-              <Text style={{ fontSize: 16 }}>
+              <Text style={[{ fontSize: 16 }, dynamicStyles.dynamicText]}>
                 Revisar tu horoscopo de hoy
               </Text>
             </TouchableOpacity>

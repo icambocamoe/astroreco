@@ -28,13 +28,12 @@ import Languages from "../lang/Languages.json";
 import { Alert } from "react-native";
 import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
-
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState("claro00"); // Estado para el tema seleccionado en el picker
   const [selectedLanguage, setSelectedLanguage] = useState("english"); // Estado para el tema seleccionado en el picker
   const { docRef } = useContext(HoroscopeContext);
-  const context = useContext(ThemeContext); // Obtiene el contexto 
+  const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
   const setThemeData = context?.setThemeData;
 
@@ -52,9 +51,7 @@ export const SettingsScreen = ({ navigation, route }) => {
       .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
   };
 
-  const handleEditAccount = async () => {
-
-  }
+  const handleEditAccount = async () => {};
   const handleSignOut = async () => {
     try {
       await signOut(auth); // Firebase sign out
@@ -291,10 +288,10 @@ export const SettingsScreen = ({ navigation, route }) => {
             action={handleSignOut}
           />
           <Text></Text>
-          <ButtonComponent
+ {/*          <ButtonComponent
             title={t("settings.button_edit_data")}
             action={handleEditAccount}
-          />
+          /> */}
           <Text></Text>
           <ButtonComponent
             title={t("settings.button_delete_account")}
@@ -336,17 +333,18 @@ export const SettingsScreen = ({ navigation, route }) => {
               </View>
             </View>
           </Modal>
+          <Text></Text>
 
-
-           <ButtonComponent
+          {/* <ButtonComponent
+            title={t("settings.button_delete_account")}
             action={handleDeleteAccount}
-          />
+          /> */}
+          <Text></Text>
+
           <ButtonComponent
-            title={"Editar datos"}
-            action={() => navigation.navigate('Onboarding', {docRef})}
+            title={t("settings.button_edit_data")}
+            action={() => navigation.navigate("Onboarding", { docRef })}
           />
-
-
         </View>
       </View>
     </ScrollView>
