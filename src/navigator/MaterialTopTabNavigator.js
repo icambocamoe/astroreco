@@ -1,9 +1,10 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React, { useContext } from "react";
-import RecommendationsScreen from "../screens/RecommendationsScreen";
+import SongsScreen from "../screens/SongsScreen.js";
 import MoviesScreen from "../screens/MoviesScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemeContext } from "../context/ThemeContext.js";
+import BooksScreen from "../screens/BooksScreen.js";
 
 
 
@@ -40,9 +41,9 @@ export function MaterialTopTabNavigator({ route }) {
           iconName = focused ? "musical-notes" : "musical-notes-outline"; // Cambia el icono según si está enfocado o no
         } else if (route.name === "M") {
           iconName = focused ? "film" : "film-outline"; // Cambia el icono según si está enfocado o no
-        } /* else if (route.name === "Settings") {
-          iconName = focused ? "settings" : "settings-outline"; // Cambia el icono según si está enfocado o no
-        } else if (route.name === "HomeScreen") {
+        }  else if (route.name === "B") {
+          iconName = focused ? "book" : "book-outline"; // Cambia el icono según si está enfocado o no
+        } /*else if (route.name === "HomeScreen") {
           iconName = focused ? "home" : "home-outline"; // Cambia el icono según si está enfocado o no
         } */
 
@@ -61,7 +62,7 @@ export function MaterialTopTabNavigator({ route }) {
     >
       <Tab.Screen
         name="S"
-        component={RecommendationsScreen}
+        component={SongsScreen}
         initialParams={{ user }} // Pass 'user' to HoroscopeScreen
         options={{
           headerShown: false,
@@ -71,6 +72,15 @@ export function MaterialTopTabNavigator({ route }) {
       <Tab.Screen
         name="M"
         component={MoviesScreen}
+        initialParams={{ user }} // Pass 'user' to HoroscopeScreen
+        options={{
+          headerShown: false,
+         /*  tabBarLabel: "", // Esto ocultará el nombre en la pestaña */
+        }}
+      />
+      <Tab.Screen
+        name="B"
+        component={BooksScreen}
         initialParams={{ user }} // Pass 'user' to HoroscopeScreen
         options={{
           headerShown: false,

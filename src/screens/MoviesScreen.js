@@ -26,48 +26,28 @@ import { stylesAppTheme } from "../theme/AppTheme.js";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme.js";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { TitleComponent } from "../components/TitleComponent.js";
+import { HoroscopeContext } from "../context/HoroscopeContext.js";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function MoviesScreen({ route }) {
   const { user } = route.params;
-  const [movies, setMovies] = useState({});
+  const { movies, favoriteMovies, setFavoriteMovies } = useContext(HoroscopeContext);
 
-  //https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&title=avoid
-  const queryUserRefData = async () => {
-    try {
-      // Reference to the userRefData collection
-      const userRefCollection = collection(db, "userRefData");
 
-      // Create a query to filter by userIDRef
-      const q = query(userRefCollection, where("userIDRef", "==", user));
-
-      try {
-        // Execute the query
-        const querySnapshot = await getDocs(q);
-        // Iterate through the results
-        querySnapshot.forEach((doc) => {
-          // Set state with the document data
-
-          if (doc.data().recommendedMovies) {
-            console.log("hay recommended movies");
-            console.log(doc.data().recommendedMovies);
-            setMovies(doc.data().recommendedMovies);
-          } else {
-            console.log("no hay recommended movies");
-          }
-        });
-      } catch (error) {
-        console.error("Error fetching user reference data: ", error);
+  const handleFavoritePress = (item) => {
+    setFavoriteMovies((prevFavorites) => {
+      const isFavorite = prevFavorites.some((favorite) => favorite.imdb_id === item.imdb_id);
+      if (isFavorite) {
+        // Remove the item from favorites
+        return prevFavorites.filter((favorite) => favorite.imdb_id !== item.imdb_id);
+      } else {
+        // Add the item to favorites
+        return [...prevFavorites, item];
       }
-    } catch (err) {
-      console.error("Error fetching document: ", err);
-    }
+    });
+    
   };
-
-  useEffect(() => {
-
-    queryUserRefData();
-
-  }, []);
+  //https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&title=avoid
 
 
   const openUrl = (url) => {
@@ -87,6 +67,8 @@ export default function MoviesScreen({ route }) {
 
   // Helper function to render individual entries
   const renderItem = (item, index) => {
+    const isFavorite = favoriteMovies.some((favorite) => favorite.imdb_id === item.imdb_id); // Check if item is in favorites
+
     return (
       <View key={index} style={styles.card}>
         <Image source={{ uri: item.img }} style={styles.image} />
@@ -112,6 +94,13 @@ export default function MoviesScreen({ route }) {
         <Text>Top 250: {item.top250}</Text>
         <Text>Top 250 TV: {item.top250tv}</Text>
         <Text>Title Date: {item.title_date}</Text>
+        <TouchableOpacity onPress={() => handleFavoritePress(item)}>
+          <Ionicons
+            name={isFavorite ? "heart" : "heart-outline"}
+            size={30}
+            color={isFavorite ? "red" : "black"}
+          />
+        </TouchableOpacity>
       </View>
     );
   };

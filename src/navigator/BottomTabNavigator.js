@@ -1,5 +1,5 @@
 import HoroscopeScreen from "../screens/HoroscopeScreen.js";
-import RecommendationsScreen from "../screens/RecommendationsScreen.js";
+import RecommendationsScreen from "../screens/SongsScreen.js";
 import MoviesScreen from "../screens/MoviesScreen.js";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
