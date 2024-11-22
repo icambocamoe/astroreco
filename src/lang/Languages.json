@@ -20,6 +20,15 @@
       "welcome_message": "¡Bienvenido a nuestra aplicación!",
       "button_text": "Continuar"
     },
+    "birthchart":{
+      "title": "Carta astrológica: ",
+      "subtitle": "Información de nacimiento: ",
+      "date": "Fecha: ",
+      "time": "Hora: ",
+      "city": "Ciudad: ",
+      "planets": "Planetas: ",
+      "houses": "Casas: "
+    },
     "settings": {
       "title": "Configuración",
       "language_label": "Idioma",
@@ -59,6 +68,15 @@
       "title": "Home",
       "welcome_message": "Welcome to our app!",
       "button_text": "Continue"
+    },
+    "birthchart":{
+      "title": "Astrological chart: ",
+      "subtitle": "Birth Information: ",
+      "date": "Date: ",
+      "time": "Time: ",
+      "city": "City: ",
+      "planets": "Planets: ",
+      "houses": "Houses: "
     },
     "settings": {
       "title": "Settings",

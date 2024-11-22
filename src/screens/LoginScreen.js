@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,8 +18,9 @@ import { TitleComponent } from "../components/TitleComponent.js";
 import { ButtonComponent } from "../components/ButtonComponent.js";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme.js";
 import { ThemeContext } from "../context/ThemeContext.js";
-import { LanguajeContext } from "../context/LanguageContext.js";
+import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit } = useForm();
@@ -50,14 +51,16 @@ export default function LoginScreen({ navigation }) {
 
   const context = useContext(ThemeContext); // Obtiene el contexto
   const themeData = context?.themeData; // Obtiene themeData del contexto
+  const setThemeData = context?.setThemeData;
 
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
   }
 
-  const contextLang = useContext(LanguajeContext);
+  const contextLang = useContext(LanguageContext);
   const languageData = contextLang?.languageData;
   const currentLanguage = languageData?.language || "spanish";
+  const setLanguageData = contextLang?.setLanguageData;
 
   const t = (keyPath) => {
     return keyPath
@@ -67,6 +70,36 @@ export default function LoginScreen({ navigation }) {
 
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+  useEffect(() => {
+    // Carga el tema al iniciar la app
+    const loadStoredTheme = async () => {
+      const storedTheme = await AsyncStorage.getItem("themeColors");
+      if (storedTheme) {
+        //setTheme(JSON.parse(storedTheme));
+        setThemeData(JSON.parse(storedTheme));
+        console.log("Theme loaded!");
+      }
+    };
+    loadStoredTheme();
+  }, []);
+
+  useEffect(() => {
+    const loadLanguage = async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem("appLanguage");
+
+        if (storedLanguage) {
+          setLanguageData({ language: storedLanguage }); // Corrige el estado del contexto
+        }
+      } catch (error) {
+        console.error("Error loading language:", error);
+      }
+    };
+    loadLanguage();
+  }, []);
+
+
 
   return (
     <ScrollView

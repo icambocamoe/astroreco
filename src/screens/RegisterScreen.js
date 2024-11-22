@@ -25,7 +25,7 @@ import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme.js";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { TitleComponent } from "../components/TitleComponent.js";
 import { ButtonComponent } from "../components/ButtonComponent.js";
-import { LanguajeContext } from "../context/LanguageContext.js";
+import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 
 export default function RegisterScreen({ navigation }) {
@@ -84,7 +84,7 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
-  const contextLang = useContext(LanguajeContext);
+  const contextLang = useContext(LanguageContext);
   const languageData = contextLang?.languageData;
   const currentLanguage = languageData?.language || "spanish";
 

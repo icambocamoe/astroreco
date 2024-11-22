@@ -22,6 +22,8 @@ import {
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import { TitleComponent } from "../components/TitleComponent.js";
+import { LanguageContext } from "../context/LanguageContext.js";
+import Languages from "../lang/Languages.json";
 
 export function BirthChartScreen({ navigation, route }) {
   const { user } = route.params;
@@ -30,6 +32,22 @@ export function BirthChartScreen({ navigation, route }) {
   const [aspects, setAspects] = useState({});
   const [chart, setChart] = useState({});
   const [astrologicalData, setAstrologicalData] = useState({});
+
+  const contextLang = useContext(LanguageContext);
+  const languageData = contextLang?.languageData;
+  const currentLanguage = languageData?.language || "spanish";
+
+/*   const [renderKey, setRenderKey] = useState(0);
+
+  useEffect(() => {
+    setRenderKey((prevKey) => prevKey + 1); // Cambia el estado para forzar el re-render
+  }, [currentLanguage]); // Solo se ejecuta cuando cambia el idioma */
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
+  };
 
   useEffect(() => {
     const queryUserRefData = async () => {
@@ -111,13 +129,13 @@ export function BirthChartScreen({ navigation, route }) {
   const dynamicStyles = dynamicStylesAppTheme(themeData);
 
   return (
-    <ScrollView
+    <ScrollView 
       style={[
         dynamicStyles.dynamicScrollViewStyle,
         stylesAppTheme.scrollViewStyle,
       ]}
     >
-      <View
+      <View /* key={renderKey} */
         style={[
           /* dynamicStyles.dynamicMainContainer,
           stylesAppTheme.mainContainer, */
@@ -133,22 +151,40 @@ export function BirthChartScreen({ navigation, route }) {
         />
       </View> */}
         {/* <View style={stylesAppTheme.viewContainer}> */}
-        <View style={[dynamicStyles.dynamicViewContainer, stylesAppTheme.viewContainer]}>
+        <View
+          style={[
+            dynamicStyles.dynamicViewContainer,
+            stylesAppTheme.viewContainer,
+          ]}
+        >
           <View>
             <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
-              Birth Chart {astrologicalData.name}
+              {t("birthchart.title")} {astrologicalData.name}
             </Text>
-            <Text style={[styles.subheader, dynamicStyles.dynamicText]}>Birth Info</Text>
-            <Text style={[styles.info, dynamicStyles.dynamicText]}>
-              Date: {astrologicalData.year}-{astrologicalData.month}-
-              {astrologicalData.day}
+            <Text style={[styles.subheader, dynamicStyles.dynamicText]}>
+              {t("birthchart.subtitle")}
             </Text>
             <Text style={[styles.info, dynamicStyles.dynamicText]}>
-              Time: {astrologicalData.hour}:{astrologicalData.minute}
+              {t("birthchart.date")} {astrologicalData.year}-
+              {astrologicalData.month}-{astrologicalData.day}
             </Text>
-            <Text style={[styles.info, dynamicStyles.dynamicText]}>City: {astrologicalData.city}</Text>
+            <Text style={[styles.info, dynamicStyles.dynamicText]}>
+              {t("birthchart.time")} {astrologicalData.hour}:
+              {astrologicalData.minute}
+            </Text>
+            <Text style={[styles.info, dynamicStyles.dynamicText]}>
+              {t("birthchart.city")} {astrologicalData.city}
+            </Text>
 
-            <Text style={[styles.subheader, dynamicStyles.dynamicText, { fontSize: 24 }]}>Planets</Text>
+            <Text
+              style={[
+                styles.subheader,
+                dynamicStyles.dynamicText,
+                { fontSize: 24 },
+              ]}
+            >
+              {t("birthchart.planets")}
+            </Text>
             <PlanetCard planet={astrologicalData.sun} />
             <PlanetCard planet={astrologicalData.moon} />
             <PlanetCard planet={astrologicalData.mercury} />
@@ -159,19 +195,27 @@ export function BirthChartScreen({ navigation, route }) {
             <PlanetCard planet={astrologicalData.uranus} />
             <PlanetCard planet={astrologicalData.neptune} />
             <PlanetCard planet={astrologicalData.pluto} />
-            <Text style={[styles.subheader, dynamicStyles.dynamicText, { fontSize: 24 }]}>Houses</Text>
-            <HouseCard planet={astrologicalData.first_house}/>
-            <HouseCard planet={astrologicalData.second_house}/>
-            <HouseCard planet={astrologicalData.third_house}/>
-            <HouseCard planet={astrologicalData.fourth_house}/>
-            <HouseCard planet={astrologicalData.fifth_house}/>
-            <HouseCard planet={astrologicalData.sixth_house}/>
-            <HouseCard planet={astrologicalData.seventh_house}/>
-            <HouseCard planet={astrologicalData.eighth_house}/>
-            <HouseCard planet={astrologicalData.ninth_house}/>
-            <HouseCard planet={astrologicalData.tenth_house}/>
-            <HouseCard planet={astrologicalData.eleventh_house}/>
-            <HouseCard planet={astrologicalData.twelfth_house}/>
+            <Text
+              style={[
+                styles.subheader,
+                dynamicStyles.dynamicText,
+                { fontSize: 24 },
+              ]}
+            >
+              {t("birthchart.houses")}
+            </Text>
+            <HouseCard planet={astrologicalData.first_house} />
+            <HouseCard planet={astrologicalData.second_house} />
+            <HouseCard planet={astrologicalData.third_house} />
+            <HouseCard planet={astrologicalData.fourth_house} />
+            <HouseCard planet={astrologicalData.fifth_house} />
+            <HouseCard planet={astrologicalData.sixth_house} />
+            <HouseCard planet={astrologicalData.seventh_house} />
+            <HouseCard planet={astrologicalData.eighth_house} />
+            <HouseCard planet={astrologicalData.ninth_house} />
+            <HouseCard planet={astrologicalData.tenth_house} />
+            <HouseCard planet={astrologicalData.eleventh_house} />
+            <HouseCard planet={astrologicalData.twelfth_house} />
 
             {/* Add more PlanetCard components for other planets */}
           </View>
