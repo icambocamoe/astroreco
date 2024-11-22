@@ -31,6 +31,7 @@ export const stylesAppTheme = StyleSheet.create({
     borderRadius: 30,
     height: 50,
     width: "100%",
+    borderWidth: 2,
   },
   buttonText: {
     color: "white",

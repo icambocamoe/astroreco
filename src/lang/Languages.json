@@ -1,0 +1,81 @@
+{
+  "spanish": {
+    "login": {
+      "title": "¡Míralo tú mismo!",
+      "button_text": "Iniciar sesion",
+      "text_link" : "¿No tienes una cuenta? Registrate",
+      "email_input": "Correo electrónico",
+      "password_input": "Contraseña"
+    },
+    "register":{
+        "title": "¡Regístrate para obtener tu contenido cósmico!",
+        "name_input": "Nombre",
+        "email_input": "Correo electrónico",
+        "password_input": "Contraseña",
+        "button_text": "Registrar",
+        "text_link": "¿Ya tienes una cuenta? Inicia sesión"
+    },
+    "home": {
+      "title": "Inicio",
+      "welcome_message": "¡Bienvenido a nuestra aplicación!",
+      "button_text": "Continuar"
+    },
+    "settings": {
+      "title": "Configuración",
+      "language_label": "Idioma",
+      "theme_label": "Tema",
+      "placeholder_theme": "Selecciona un tema",
+      "placeholder_language": "Selecciona un idioma",
+      "button_sign_out": "cerrar sesion"
+
+    },
+    "profile": {
+      "title": "Perfil",
+      "name_label": "Nombre",
+      "email_label": "Correo electrónico",
+      "logout_button": "Cerrar sesión"
+    },
+    "horoscope": {
+        "title": "Horóscopo"
+    }
+  },
+  "english": {
+    "login": {
+      "title": "Show it's yourself!",
+      "button_text": "Login",
+      "text_link" : "Don't have an account? Resgister",
+      "email_input": "Email",
+      "password_input": "Password"
+    },
+    "register":{
+        "title": "Register to get your cosmic content!",
+        "name_input": "Name",
+        "email_input": "Email",
+        "password_input": "Password",
+        "button_text": "Register",
+        "text_link": "Already have an account? Login"
+    },
+    "home": {
+      "title": "Home",
+      "welcome_message": "Welcome to our app!",
+      "button_text": "Continue"
+    },
+    "settings": {
+      "title": "Settings",
+      "language_label": "Language",
+      "theme_label": "Theme",
+      "placeholder_theme": "Select a theme",
+      "placeholder_language": "Select a language",
+      "button_sign_out": "sign out"
+    },
+    "profile": {
+      "title": "Profile",
+      "name_label": "Name",
+      "email_label": "Email",
+      "logout_button": "Log out"
+    },
+    "horoscope": {
+        "title": "Horoscope"
+    }
+  }
+}

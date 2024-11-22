@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
@@ -6,6 +6,8 @@ import { ThemeContext } from "../context/ThemeContext";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LanguajeContext } from "../context/LanguageContext";
+import Languages from "../lang/Languages.json";
+import { LoadingIndicator } from "../components/LoadingIndicator";
 import { HoroscopeContext } from "../context/HoroscopeContext";
 import Sentiment from "sentiment";
 import {
@@ -33,11 +35,25 @@ export const HomeScreen = ({ route }) => {
   const languageData = contextLang?.languageData;
   const setLanguageData = contextLang?.setLanguageData;
 
+  const [loading, setLoading] = useState(false);
+
+  if (loading)
+    return <LoadingIndicator />
+
   if (!themeData) {
     return null; // Puedes manejar la carga o estado por defecto aquí
   }
   // Genera los estilos dinámicos pasando themeData
   const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+  /* const { languageData } = useContext(LanguajeContext); */
+  const currentLanguage = languageData?.language || "spanish";
+
+  const t = (keyPath) => {
+    return keyPath
+      .split(".")
+      .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
+  };
 
   /*   const loadTheme = async () => {
     try {
@@ -514,6 +530,11 @@ export const HomeScreen = ({ route }) => {
           ]}
         >
           <Text style={[dynamicStyles.dynamicText]}>Home Screen</Text>
+          <Text style={[dynamicStyles.dynamicText]}>{t("home.title")}</Text>
+          <Text style={[dynamicStyles.dynamicText]}>
+            {" "}
+            {t("home.welcome_message")}
+          </Text>
         </View>
       </View>
     </ScrollView>
