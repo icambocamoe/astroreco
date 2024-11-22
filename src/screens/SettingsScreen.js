@@ -288,10 +288,10 @@ export const SettingsScreen = ({ navigation, route }) => {
             action={handleSignOut}
           />
           <Text></Text>
-          <ButtonComponent
+ {/*          <ButtonComponent
             title={t("settings.button_edit_data")}
             action={handleEditAccount}
-          />
+          /> */}
           <Text></Text>
           <ButtonComponent
             title={t("settings.button_delete_account")}
@@ -335,14 +335,14 @@ export const SettingsScreen = ({ navigation, route }) => {
           </Modal>
           <Text></Text>
 
-          <ButtonComponent
+          {/* <ButtonComponent
             title={t("settings.button_delete_account")}
             action={handleDeleteAccount}
-          />
+          /> */}
           <Text></Text>
 
           <ButtonComponent
-            title={"Editar datos"}
+            title={t("settings.button_edit_data")}
             action={() => navigation.navigate("Onboarding", { docRef })}
           />
         </View>
