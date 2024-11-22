@@ -36,6 +36,9 @@ export const SettingsScreen = ({ navigation, route }) => {
       .reduce((obj, key) => obj?.[key], Languages?.[currentLanguage]);
   };
 
+  const handleEditAccount = async () =>{
+    
+  }
   const handleSignOut = async () => {
     try {
       await signOut(auth); // Firebase sign out
@@ -249,6 +252,10 @@ export const SettingsScreen = ({ navigation, route }) => {
           <ButtonComponent
             title={"Delete account"}
             action={handleDeleteAccount}
+          />
+           <ButtonComponent
+            title={"Editar datos"}
+            action={handleEditAccount}
           />
         </View>
       </View>

@@ -94,7 +94,17 @@ export const HomeScreen = ({ route }) => {
     setSentimentResult,
     books,
     setBooks,
+    favoriteSongs,
+    setFavoriteSongs,
+    favoriteMovies,
+    setFavoriteMovies,
+    favoriteBooks,
+    setFavoriteBooks
+
   } = useContext(HoroscopeContext);
+
+  
+ 
 
   const sentiment = new Sentiment();
   // JSON object containing zodiac signs
@@ -246,6 +256,28 @@ export const HomeScreen = ({ route }) => {
                   console.error("Error in firebase:", error);
                 }
               }
+              if (Object.keys(doc.data().favoriteSongs).length > 0) {
+                console.log("hay favoritesongs");
+                //console.log(doc.data().favoriteSongs)
+                setFavoriteSongs(doc.data().favoriteSongs);
+              } else {
+                console.log("no hay favoritesongs");
+              }
+              if (Object.keys(doc.data().favoriteMovies).length > 0) {
+                console.log("hay favoriteMovies");
+                console.log(doc.data().favoriteMovies)
+               
+                setFavoriteMovies(doc.data().favoriteMovies);
+              } else {
+                console.log("no hay favoriteMovies");
+              }
+              if (Object.keys(doc.data().favoriteBooks).length > 0) {
+                console.log("hay favoriteBooks");
+                //console.log(doc.data().favoriteBooks)
+                setFavoriteBooks(doc.data().favoriteBooks);
+              } else {
+                console.log("no hay favoriteBooks");
+              }
             });
 
           } catch (error) {
@@ -298,6 +330,9 @@ export const HomeScreen = ({ route }) => {
           horoscope: response.data.message,
           date: formattedDate,
         },
+        recommendedSongs: {},
+        recommendedMovies: {},
+        recommendedBooks: {},
         updatedAt: serverTimestamp(), // Update the timestamp as well
       });
     } catch (error) {
@@ -375,7 +410,7 @@ export const HomeScreen = ({ route }) => {
           querySnapshot.forEach((doc) => {
 
             setDocRef(doc.ref);
-            setSunSign(getZodiacName(doc.data().apiInfo.data.sun.sign));
+            const sSign = getZodiacName(doc.data().apiInfo.data.sun.sign);
             const currentDate = new Date();// Get current date
             const year = currentDate.getFullYear();
             const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
@@ -407,7 +442,7 @@ export const HomeScreen = ({ route }) => {
                 method: "GET",
                 url: "https://daily-horoscope8.p.rapidapi.com/daily",
                 params: {
-                  sign: sunSign,
+                  sign: sSign,
                   date: formattedDate,
                 },
                 headers: {

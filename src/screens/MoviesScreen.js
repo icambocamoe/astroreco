@@ -31,8 +31,24 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function MoviesScreen({ route }) {
   const { user } = route.params;
-  const { movies, favoriteMovies, setFavoriteMovies } = useContext(HoroscopeContext);
+  const { docRef, movies, favoriteMovies, setFavoriteMovies } = useContext(HoroscopeContext);
 
+  useEffect( () => {
+    const updateDatabase = async () => {
+      try {
+        await updateDoc(docRef, {
+          favoriteMovies: favoriteMovies, // Correcting the key to `favoriteMovies`
+          updatedAt: serverTimestamp(), // Update the timestamp as well
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (favoriteMovies) {
+      updateDatabase();
+    }
+  }, [favoriteMovies]);
 
   const handleFavoritePress = (item) => {
     setFavoriteMovies((prevFavorites) => {
@@ -45,7 +61,7 @@ export default function MoviesScreen({ route }) {
         return [...prevFavorites, item];
       }
     });
-    
+
   };
   //https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&title=avoid
 

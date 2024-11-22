@@ -33,14 +33,26 @@ import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
 export default function BooksScreen({ route, onFavorite }) {
     const { user } = route.params;
-    const { books, favoriteBooks, setFavoriteBooks } = useContext(HoroscopeContext);
+    const { docRef, books, favoriteBooks, setFavoriteBooks } = useContext(HoroscopeContext);
 
     const context = useContext(ThemeContext); // Obtiene el contexto
     const themeData = context?.themeData; // Obtiene themeData del contexto
-
-    useEffect(() => {
-        console.log("favoritos ", favoriteBooks)
-    }, [favoriteBooks])
+    useEffect( () => {
+        const updateDatabase = async () => {
+            try {
+              await updateDoc(docRef, {
+                favoriteBooks: favoriteBooks, // Correcting the key to `favoriteBooks`
+                updatedAt: serverTimestamp(), // Update the timestamp as well
+              });
+            } catch (error) {
+              console.error(error);
+            }
+          };
+        
+          if (favoriteBooks) {
+            updateDatabase();
+          }
+      }, [favoriteBooks]);
     const handleFavoritePress = (item) => {
         setFavoriteBooks((prevFavorites) => {
             const isFavorite = prevFavorites.some((favorite) => favorite.title === item.title);
