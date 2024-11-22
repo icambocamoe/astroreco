@@ -22,15 +22,15 @@ export const FavoriteBooksScreen = () => {
   // Helper function to render individual entries
   const renderItem = (book, index) => {
     return (
-      <View key={index} style={styles.card}>
+      <View key={index} style={[styles.card, {borderWidth: 1, borderColor: themeData.texto, backgroundColor: themeData.vistas}]}>
 
+        <Text style={[styles.title, dynamicStyles.dynamicText]}>{book.item.title}</Text>
         <Image source={{ uri: book.item.imgUrl }} style={styles.image} />
-        <Text style={styles.title}>{book.item.title}</Text>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text>Author: {book.item.author}</Text>
-            <Text>Genre: {book.item.genre} </Text>
-            <Text>Format: {book.item.format}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Author: {book.item.author}</Text>
+            <Text style={[dynamicStyles.dynamicText]}>Genre: {book.item.genre} </Text>
+            <Text style={[dynamicStyles.dynamicText]}>Format: {book.item.format}</Text>
           </View>
 
         </View>
@@ -62,7 +62,7 @@ export const FavoriteBooksScreen = () => {
       <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
         {/* <TitleComponent /> */}
         <View style={[stylesAppTheme.viewContainer, dynamicStyles.dynamicViewContainer]}>
-          <Text style={[dynamicStyles.dynamicText]}>Favorite Books</Text>
+          {/* <Text style={[dynamicStyles.dynamicText]}>Favorite Books</Text> */}
           <FlatList
             data={favoriteBooks}
             keyExtractor={(item, index) => `${item.title || index}`}
@@ -96,10 +96,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
   },
   image: {
     width: 100,
-    height: 100,
+    height: 150,
     marginVertical: 10,
   },
   row: {

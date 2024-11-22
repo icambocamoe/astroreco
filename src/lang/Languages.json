@@ -38,7 +38,10 @@
       "button_sign_out": "cerrar sesion",
       "modal_text": "¿Seguro que deseas borrar tu cuenta?",
       "modal_confirm": "Eliminar",
-      "modal_cancel": "Cancelar"
+      "modal_cancel": "Cancelar",
+      "button_edit_data" : "Editar datos",
+      "button_delete_account" : "Borrar cuenta"
+
 
     },
     "profile": {
@@ -90,7 +93,10 @@
       "button_sign_out": "sign out",
       "modal_text": "Are you sure you want to delete your account?",
       "modal_confirm": "Delete",
-      "modal_cancel": "Cancel"
+      "modal_cancel": "Cancel",
+      "button_edit_data" : "Edit data",
+      "button_delete_account" : "Delete account"
+
     },
     "profile": {
       "title": "Profile",

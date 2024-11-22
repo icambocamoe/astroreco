@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, ScrollView, TouchableOpacity, FlatList, StyleSheet, } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Linking,
+} from "react-native";
 import { TitleComponent } from "../components/TitleComponent";
 import { stylesAppTheme } from "../theme/AppTheme";
 import { ThemeContext } from "../context/ThemeContext";
 import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
 import { HoroscopeContext } from "../context/HoroscopeContext";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export const FavoriteSongsScreen = () => {
   const context = useContext(ThemeContext); // Obtiene el contexto
@@ -12,8 +21,8 @@ export const FavoriteSongsScreen = () => {
 
   const { favoriteSongs, setFavoriteSongs } = useContext(HoroscopeContext);
   useEffect(() => {
-    console.log("favoritos ", favoriteSongs)
-  }, [favoriteSongs])
+    console.log("favoritos ", favoriteSongs);
+  }, [favoriteSongs]);
 
   const openUrl = (url) => {
     Linking.openURL(url).catch((err) =>
@@ -27,33 +36,71 @@ export const FavoriteSongsScreen = () => {
   const dynamicStyles = dynamicStylesAppTheme(themeData);
   // Helper function to render individual entries
   const renderItem = (song) => {
-    console.log(song.item)
+    console.log(song.item);
     return (
-      <View key={song.item.index} style={styles.card}>
-        <Text style={styles.title}>{song.item.name}</Text>
+      <View
+        key={song.item.index}
+        style={[
+          styles.card,
+          {
+            borderWidth: 1,
+            borderColor: themeData.texto,
+            backgroundColor: themeData.vistas,
+          },
+        ]}
+      >
+        <Text style={[styles.title, dynamicStyles.dynamicText]}>
+          {song.item.name}
+        </Text>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text>Artist: {song.item.artist?.name}</Text>
-            <Text>Duration: {song.item.duration} seconds</Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Artist: {song.item.artist?.name}
+            </Text>
+            <Text style={[dynamicStyles.dynamicText]}>
+              Duration: {song.item.duration} seconds
+            </Text>
           </View>
-
+          <TouchableOpacity onPress={() => openUrl(song.item.url)}>
+            {/* <Text style={styles.link}>Listen on Last.fm</Text>  */}
+            <Ionicons name="play" size={30} color={themeData.texto} />
+          </TouchableOpacity>
         </View>
 
         <View /* style={styles.row} */>
           {/* Touchable link to open the URL */}
-          <TouchableOpacity onPress={() => openUrl(song.item.url)}>
+          {/* <TouchableOpacity onPress={() => openUrl(song.item.url)}>
             <Text style={styles.link}>Listen on Last.fm</Text>
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => openUrl(song.item.url)}>
+            {/* <Text style={styles.link}>Listen on Last.fm</Text>  */}
+            <Ionicons name="play" size={30} color={themeData.texto} />
           </TouchableOpacity>
         </View>
       </View>
     );
   };
   return (
-    <ScrollView style={[stylesAppTheme.scrollViewStyle, dynamicStyles.dynamicScrollViewStyle]}>
-      <View style={[stylesAppTheme.mainContainer, dynamicStyles.dynamicMainContainer]}>
+    <ScrollView
+      style={[
+        stylesAppTheme.scrollViewStyle,
+        dynamicStyles.dynamicScrollViewStyle,
+      ]}
+    >
+      <View
+        style={[
+          stylesAppTheme.mainContainer,
+          dynamicStyles.dynamicMainContainer,
+        ]}
+      >
         {/* <TitleComponent /> */}
-        <View style={[stylesAppTheme.viewContainer, dynamicStyles.dynamicViewContainer]}>
-          <Text style={[dynamicStyles.dynamicText]}>Favorite Songs</Text>
+        <View
+          style={[
+            stylesAppTheme.viewContainer,
+            dynamicStyles.dynamicViewContainer,
+          ]}
+        >
+          {/* <Text style={[dynamicStyles.dynamicText]}>Favorite Songs</Text> */}
           <View
             style={[
               stylesAppTheme.viewContainer,
@@ -72,7 +119,6 @@ export const FavoriteSongsScreen = () => {
     </ScrollView>
   );
 };
-
 
 const styles = StyleSheet.create({
   link: {
@@ -104,6 +150,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
+    width: "auto",
+
     //backgroundColor: "red",
     //justifyContent: "center",
     gap: 90,
