@@ -10,6 +10,12 @@ import months from '../../assets/objects/months.js';
 import CitySearch from './CitySearchScreen.js';
 import { HoroscopeContext } from "../context/HoroscopeContext";
 import axios from "axios";
+import { TitleComponent } from '../components/TitleComponent.js';
+import { dynamicStylesAppTheme } from "../theme/DynamicAppTheme";
+import { ThemeContext } from "../context/ThemeContext";
+import { stylesAppTheme } from '../theme/AppTheme.js';
+import { TextComponent } from '../components/TextComponent.js';
+import { ButtonComponent } from '../components/ButtonComponent.js';
 
 const OnboardingScreen = ({ navigation, route }) => {
     const { docRef } = route.params; // Get email and password from navigation params
@@ -251,16 +257,51 @@ const OnboardingScreen = ({ navigation, route }) => {
         await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a 2-second delay
         navigation.navigate('Home', { user });
     };
-    return (
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <View style={styles.container}>
-                <Text style={styles.header1}>Welcome to Astromedia!</Text>
-                <Text style={styles.headers}>Let's get your birth chart done!</Text>
 
-                <Text style={styles.sectionLabel}>Fecha de Nacimiento</Text>
+
+    const context = useContext(ThemeContext); // Obtiene el contexto
+      const themeData = context?.themeData; // Obtiene themeData del contexto
+    
+      if (!themeData) {
+        return null; // Puedes manejar la carga o estado por defecto aquí
+      }
+      // Genera los estilos dinámicos pasando themeData
+      const dynamicStyles = dynamicStylesAppTheme(themeData);
+
+    return (
+        <ScrollView /*  key={renderKey} */
+              style={[
+                dynamicStyles.dynamicScrollViewStyle,
+                stylesAppTheme.scrollViewStyle,
+              ]}
+            >
+            <View
+                      style={[
+                        dynamicStyles.dynamicMainContainer,
+                        stylesAppTheme.mainContainer,
+                      ]}
+                    >
+                
+                <TitleComponent/>
+
+
+
+            <View
+                style={[
+                    dynamicStyles.dynamicViewContainer,
+            stylesAppTheme.viewContainer,
+          ]}
+        >
+
+
+
+                <TextComponent text={"Let's get your birth chart done!"} align={"center"} />
+                <TextComponent text={"Fecha de Nacimiento"} bold={true} align={"center"} />
+
                 <View style={styles.pickerGroup}>
                     <View style={styles.pickerItem}>
-                        <Text style={styles.label}>Dia</Text>
+                        <TextComponent text={"Dia"} align={"center"} />
+
                         <Controller
                             control={control}
                             name="day"
@@ -276,7 +317,10 @@ const OnboardingScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={styles.pickerItem}>
-                        <Text style={styles.label}>Mes</Text>
+                        
+                        <TextComponent text={"Mes"} align={"center"}/>
+
+                        
                         <Controller
                             control={control}
                             name="month"
@@ -292,7 +336,8 @@ const OnboardingScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={styles.pickerItem}>
-                        <Text style={styles.label}>Año</Text>
+                    <TextComponent text={"Año"} align={"center"} />
+
                         <Controller
                             control={control}
                             name="year"
@@ -308,10 +353,12 @@ const OnboardingScreen = ({ navigation, route }) => {
                     </View>
                 </View>
 
-                <Text style={styles.sectionLabel}>Hora y Minuto</Text>
+                <TextComponent text={"Hora y Minuto"} bold={true} align={"center"} />
+
                 <View style={styles.pickerGroup}>
                     <View style={styles.pickerItem}>
-                        <Text style={styles.label}>Hora</Text>
+                    <TextComponent text={"Hora"} align={"center"} />
+
                         <Controller
                             control={control}
                             name="hour"
@@ -327,7 +374,8 @@ const OnboardingScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={styles.pickerItem}>
-                        <Text style={styles.label}>Minuto</Text>
+                    <TextComponent text={"Minuto"} align={"center"} />
+                        
                         <Controller
                             control={control}
                             name="minute"
@@ -342,12 +390,21 @@ const OnboardingScreen = ({ navigation, route }) => {
                         />
                     </View>
                 </View>
-                <Text style={styles.sectionLabel}>Lugar de Nacimiento</Text>
+               
+                <TextComponent text={"Lugar de Nacimiento"} bold={true} align={"center"} />
+
                 <CitySearch onCitySelected={handleCitySelection} />
 
-                <View style={styles.buttonContainer}>
+                {/* <View style={styles.buttonContainer}>
                     <Button title="Finish Onboarding" onPress={handleSubmit(onSubmit)} />
-                </View>
+                </View> */}
+
+                <ButtonComponent
+                            title={"Save data"}
+                            //action={handleDeleteAccount}
+                            action={() => handleSubmit(onSubmit)}
+                          />
+            </View>
             </View>
         </ScrollView>
     );
