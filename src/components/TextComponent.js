@@ -23,7 +23,10 @@ export const TextComponent/* : React.FC<TextComponentProps> */ = ({ text, bold, 
     const dynamicStyles = dynamicStylesAppTheme(themeData);
 
     const fontSize = typeText === "header" ? 24 : typeText ==="subheader" ? 20 : 18;
-    const textAlign = align === 'center' ? "center" : align === 'right' ? "right" : align === "justify" ? "justify" : "left"
+    const textAlign = align === 'center' ? "center" : align === 'right' ? "right" : align === "justify" ? "justify" : "left";
+
+    const marginT = typeText === "header" ? 0 : typeText ==="subheader" ? 20 : 5;
+    const marginB = typeText === "header" ? 10 : typeText ==="subheader" ? 10 : 5;
 
     const additionalStyles/* : TextStyle */ = {
         fontWeight: bold ? "bold" : "normal",
@@ -31,6 +34,8 @@ export const TextComponent/* : React.FC<TextComponentProps> */ = ({ text, bold, 
         textDecorationLine: underline ? 'underline' : 'none',
         fontSize: fontSize,
         textAlign: textAlign,
+        marginBottom: marginB,
+        marginTop: marginT,
     }
 
     return (

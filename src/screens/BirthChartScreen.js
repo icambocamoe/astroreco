@@ -25,6 +25,7 @@ import { TitleComponent } from "../components/TitleComponent.js";
 import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 import { HoroscopeContext } from "../context/HoroscopeContext";
+import { TextComponent } from "../components/TextComponent.js";
 export function BirthChartScreen({ navigation, route }) {
   const { user } = route.params;
   console.log("home", user);
@@ -160,33 +161,21 @@ useEffect(() => {
           ]}
         >
           <View>
-            <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
-              {t("birthchart.title")} {/* {astrologicalData.name} */}
-            </Text>
-            <Text style={[styles.subheader, dynamicStyles.dynamicText]}>
-              {t("birthchart.subtitle")}
-            </Text>
-            <Text style={[styles.info, dynamicStyles.dynamicText]}>
-              {t("birthchart.date")} {astrologicalData.year}-
-              {astrologicalData.month}-{astrologicalData.day}
-            </Text>
-            <Text style={[styles.info, dynamicStyles.dynamicText]}>
-              {t("birthchart.time")} {astrologicalData.hour}:
-              {astrologicalData.minute}
-            </Text>
-            <Text style={[styles.info, dynamicStyles.dynamicText]}>
-              {t("birthchart.city")} {astrologicalData.city}
-            </Text>
 
-            <Text
-              style={[
-                styles.subheader,
-                dynamicStyles.dynamicText,
-                { fontSize: 24 },
-              ]}
-            >
-              {t("birthchart.planets")}
-            </Text>
+            <TextComponent text={t("birthchart.title")} align={"center"} bold={true} typeText={"header"} />
+
+            <TextComponent text={t("birthchart.subtitle")} bold={true} typeText={"subheader"} />
+            
+            <TextComponent text={`${t("birthchart.date") } ${astrologicalData.year}-${astrologicalData.month}-${astrologicalData.day}` } />
+
+            <TextComponent text={`${t("birthchart.time")} ${astrologicalData.hour}:${astrologicalData.minute}`} />
+        
+            <TextComponent text={`${t("birthchart.city")} ${astrologicalData.city}`} />
+
+            <TextComponent />
+
+            <TextComponent text={t("birthchart.planets")} bold={true} typeText={"header"} />
+
             <PlanetCard planet={astrologicalData.sun} />
             <PlanetCard planet={astrologicalData.moon} />
             <PlanetCard planet={astrologicalData.mercury} />
@@ -197,15 +186,10 @@ useEffect(() => {
             <PlanetCard planet={astrologicalData.uranus} />
             <PlanetCard planet={astrologicalData.neptune} />
             <PlanetCard planet={astrologicalData.pluto} />
-            <Text
-              style={[
-                styles.subheader,
-                dynamicStyles.dynamicText,
-                { fontSize: 24 },
-              ]}
-            >
-              {t("birthchart.houses")}
-            </Text>
+          
+
+            <TextComponent text={t("birthchart.houses")} bold={true} typeText={"subheader"} />
+
             <HouseCard planet={astrologicalData.first_house} />
             <HouseCard planet={astrologicalData.second_house} />
             <HouseCard planet={astrologicalData.third_house} />
@@ -234,28 +218,8 @@ const styles = {
     padding: 50, // Combining padding from both containers
     backgroundColor: "#fff",
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  welcome: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  subheader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  info: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
+
+
   card: {
     backgroundColor: "#f0f8ff",
     padding: 15,
@@ -270,16 +234,5 @@ const styles = {
     fontSize: 20,
     fontWeight: "bold",
   },
-  image: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-    alignSelf: "center",
-  },
-  text: {
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
+  
 };
