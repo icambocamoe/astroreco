@@ -19,6 +19,7 @@ import { HoroscopeContext } from "../context/HoroscopeContext.js";
 
 import Languages from "../lang/Languages.json";
 import { LoadingIndicator } from "../components/LoadingIndicator.js";
+import { TextComponent } from "../components/TextComponent.js";
 
 export default function HoroscopeScreen({ route }) {
   const { horoscope } = useContext(HoroscopeContext);
@@ -70,49 +71,14 @@ export default function HoroscopeScreen({ route }) {
           style={[
             dynamicStyles.dynamicViewContainer,
             stylesAppTheme.viewContainer,
-          ]}
-        >
-          <Text style={[styles.title, dynamicStyles.dynamicText]}>
-            {t("horoscope.title")}
-          </Text>
-          <Text style={[styles.date, dynamicStyles.dynamicText, styles.text]}>
-            {horoscope.date}
-          </Text>
-          <Text
-            style={[styles.horoscope, dynamicStyles.dynamicText, styles.text, {textAlign: "justify"}]}
-          >
-            {horoscope.horoscope}
-          </Text>
+          ]} >
+  
+          <TextComponent text={t("horoscope.title")} bold={true} typeText={"header"} align={"center"} />
+          <TextComponent text={`${horoscope.date}`} bold={true} typeText={"subheader"} />
+          <TextComponent text={`${horoscope.horoscope}`} align={"justify"} />
+          
         </View>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  content: {
-    fontSize: 16,
-    textAlign: "center",
-    paddingHorizontal: 10,
-  },
-  text: {
-    fontSize: 18,
-    //textAlign: "justify",
-  },
-  date: {
-    fontWeight: "bold",
-
-  }
-});
