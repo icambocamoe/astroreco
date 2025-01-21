@@ -11,7 +11,7 @@ import { stylesAppTheme } from '../theme/AppTheme'
     underline?: boolean,
 } */
 
-export const TextComponent/* : React.FC<TextComponentProps> */ = ({ text, bold, italic, underline }) => {
+export const TextComponent/* : React.FC<TextComponentProps> */ = ({ text, bold, italic, underline, typeText, align }) => {
 
     const context = useContext(ThemeContext); // Obtiene el contexto
     const themeData = context?.themeData; // Obtiene themeData del contexto
@@ -22,10 +22,15 @@ export const TextComponent/* : React.FC<TextComponentProps> */ = ({ text, bold, 
     // Genera los estilos dinámicos pasando themeData
     const dynamicStyles = dynamicStylesAppTheme(themeData);
 
+    const fontSize = typeText === "header" ? 24 : typeText ==="subheader" ? 20 : 18;
+    const textAlign = align === 'center' ? "center" : align === 'right' ? "right" : align === "justify" ? "justify" : "left"
+
     const additionalStyles/* : TextStyle */ = {
         fontWeight: bold ? "bold" : "normal",
         fontStyle: italic ? 'italic' : "normal",
         textDecorationLine: underline ? 'underline' : 'none',
+        fontSize: fontSize,
+        textAlign: textAlign,
     }
 
     return (
