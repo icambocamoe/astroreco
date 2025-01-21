@@ -27,6 +27,7 @@ import { LanguageContext } from "../context/LanguageContext.js";
 import Languages from "../lang/Languages.json";
 import { Alert } from "react-native";
 import { HoroscopeContext } from "../context/HoroscopeContext.js";
+import { TextComponent } from "../components/TextComponent.js";
 
 export const SettingsScreen = ({ navigation, route }) => {
   const [temaClaro, setTemaClaro] = useState(true);
@@ -185,9 +186,8 @@ export const SettingsScreen = ({ navigation, route }) => {
             stylesAppTheme.viewContainer,
           ]}
         >
-          <Text style={[dynamicStyles.dynamicText, styles.textScreen]}>
-            {t("settings.theme_label")}{" "}
-          </Text>
+
+          <TextComponent text={t("settings.theme_label")} bold={true} />
 
           <RNPickerSelect
             placeholder={{
@@ -239,9 +239,9 @@ export const SettingsScreen = ({ navigation, route }) => {
               },
             }}
           />
-          <Text style={[dynamicStyles.dynamicText, styles.textScreen]}>
-            {t("settings.language_label")}
-          </Text>
+
+          <TextComponent text={t("settings.language_label")} bold={true} />
+
           <RNPickerSelect
             placeholder={{
               label: "Selecciona un idioma...",
@@ -284,15 +284,10 @@ export const SettingsScreen = ({ navigation, route }) => {
           /> */}
           <ButtonComponent
             title={t("settings.button_sign_out")}
-            title={t("settings.button_sign_out")}
             action={handleSignOut}
           />
           <Text></Text>
- {/*          <ButtonComponent
-            title={t("settings.button_edit_data")}
-            action={handleEditAccount}
-          /> */}
-          <Text></Text>
+
           <ButtonComponent
             title={t("settings.button_delete_account")}
             //action={handleDeleteAccount}
@@ -335,11 +330,8 @@ export const SettingsScreen = ({ navigation, route }) => {
           </Modal>
           <Text></Text>
 
-          {/* <ButtonComponent
-            title={t("settings.button_delete_account")}
-            action={handleDeleteAccount}
-          /> */}
-          <Text></Text>
+          
+     
 
           <ButtonComponent
             title={t("settings.button_edit_data")}
@@ -391,8 +383,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  textScreen: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
 });

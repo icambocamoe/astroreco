@@ -23,6 +23,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig.js"; // Import Firebase auth
 import axios from "axios";
+import { TextComponent } from "../components/TextComponent.js";
 
 
 export const HomeScreen = ({ navigation, route }) => {
@@ -578,23 +579,22 @@ export const HomeScreen = ({ navigation, route }) => {
             dynamicStyles.dynamicViewContainer,
           ]}
         >
-          <Text style={[[styles.header, dynamicStyles.dynamicText]]}>
-            Bienvenido, {astrologicalData.name}. Hoy es {getDia(fecha.getDay())}, {fecha.getDate()} de {fecha.getMonth()} de {fecha.getFullYear()}
-          </Text>
+
+          <TextComponent text={`Bienvenido, ${astrologicalData.name}.`} align={"center"} bold={true} typeText={"header"}/>
+          <TextComponent text={`Hoy es ${getDia(fecha.getDay())}, ${fecha.getDate()} de ${fecha.getMonth()} de ${fecha.getFullYear()}`} align={"center"}  />
+
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <TouchableOpacity
               style={{
                 padding: 10,
-                paddingTop: 40,
+                paddingTop: 40, 
                 justifyContent: "center",
                 borderRadius: 5,
                 backgroundColor: 'transparent',
               }}
               onPress={() => navigation.navigate('BirthChart')}
             >
-              <Text style={[{ fontSize: 16 }, dynamicStyles.dynamicText]}>
-                Ver tu Carta Natal
-              </Text>
+              <TextComponent text={"Ver tu Carta Natal"} underline={true} />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -606,26 +606,11 @@ export const HomeScreen = ({ navigation, route }) => {
               }}
               onPress={() => navigation.navigate('Horoscope')}
             >
-              <Text style={[{ fontSize: 16 }, dynamicStyles.dynamicText]}>
-                Revisar tu horoscopo de hoy
-              </Text>
+              <TextComponent text={"Revisar tu horoscopo de hoy"} underline={true} />
             </TouchableOpacity>
           </View>
         </View>
       </View>
     </ScrollView>
   );
-};
-
-const styles = {
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    padding: 50, // Combining padding from both containers
-    backgroundColor: "#fff",
-  },
-  textScreen: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
 };
